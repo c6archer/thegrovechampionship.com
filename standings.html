@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Standings | The Grove Championship</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --green-900:#0b1f14;--green-700:#1a3a2a;--green-600:#2d5a3d;--green-500:#3d7a52;
+  --gold-500:#c9a84c;--gold-400:#dbbe72;--cream:#faf7f0;
+  --text-dark:#0f1f16;--text-muted:#5a7060;--text-faint:#8a9e90;
+  --border:rgba(201,168,76,0.18);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-dark);}
+.navbar{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(11,31,20,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.15);height:60px;display:flex;align-items:center;padding:0 2rem;gap:2rem;}
+.navbar-brand{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.08em;color:var(--gold-500);text-decoration:none;white-space:nowrap;flex-shrink:0;}
+.navbar-links{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;margin-left:auto;}
+.navbar-links::-webkit-scrollbar{display:none;}
+.nav-link{font-size:0.75rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.5);text-decoration:none;padding:0.5rem 0.9rem;border-radius:4px;white-space:nowrap;transition:color 0.2s,background 0.2s;}
+.nav-link:hover{color:var(--gold-400);background:rgba(201,168,76,0.08);}
+.nav-link.active{color:var(--gold-500);}
+.page-hero{background:var(--green-900);padding:7rem 2rem 3.5rem;position:relative;overflow:hidden;}
+.page-hero::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 58px,rgba(201,168,76,0.05) 58px,rgba(201,168,76,0.05) 60px);pointer-events:none;}
+.page-hero-inner{max-width:1100px;margin:0 auto;position:relative;}
+.page-eyebrow{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold-500);margin-bottom:0.75rem;}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4.5rem);letter-spacing:0.05em;color:#fff;line-height:1;margin-bottom:0.75rem;}
+.page-sub{font-size:0.85rem;color:rgba(255,255,255,0.35);letter-spacing:0.08em;font-weight:300;}
+/* year filter */
+.year-filter{background:var(--green-700);border-bottom:1px solid rgba(201,168,76,0.15);padding:0.75rem 2rem;display:flex;gap:0.4rem;overflow-x:auto;scrollbar-width:none;align-items:center;}
+.year-filter::-webkit-scrollbar{display:none;}
+.filter-label{font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-right:0.5rem;white-space:nowrap;}
+.yr-btn{font-family:'DM Mono',monospace;font-size:0.75rem;font-weight:500;color:rgba(255,255,255,0.5);background:transparent;border:1px solid rgba(255,255,255,0.12);padding:0.35rem 0.75rem;border-radius:4px;cursor:pointer;white-space:nowrap;transition:all 0.2s;}
+.yr-btn:hover{color:var(--gold-400);border-color:rgba(201,168,76,0.4);}
+.yr-btn.active{color:var(--green-900);background:var(--gold-500);border-color:var(--gold-500);}
+/* content */
+.page{max-width:1100px;margin:0 auto;padding:3rem 2rem 6rem;}
+.season-block{margin-bottom:3.5rem;scroll-margin-top:120px;}
+.season-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
+.season-label{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.05em;color:var(--green-700);}
+.team-count{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--text-faint);letter-spacing:0.1em;}
+.standings-table{width:100%;border-collapse:collapse;border-radius:10px;overflow:hidden;border:1px solid var(--border);}
+.standings-table thead{background:var(--green-700);}
+.standings-table thead th{font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);padding:0.75rem 1rem;text-align:left;}
+.standings-table thead th:not(:first-child):not(:nth-child(2)){text-align:right;}
+.standings-table tbody tr{border-bottom:1px solid rgba(201,168,76,0.07);transition:background 0.15s;}
+.standings-table tbody tr:last-child{border-bottom:none;}
+.standings-table tbody tr:hover{background:rgba(201,168,76,0.04);}
+.standings-table td{padding:0.8rem 1rem;font-size:0.88rem;background:#fff;color:var(--text-dark);}
+.playoff-row td{background:rgba(45,90,61,0.03)!important;}
+.rank-cell{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--text-faint)!important;width:44px;}
+.team-name{font-weight:600;color:var(--text-dark)!important;}
+.num{text-align:right!important;font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--text-muted)!important;}
+.badge{display:inline-block;font-size:0.58rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.18rem 0.45rem;border-radius:3px;margin-left:0.5rem;vertical-align:middle;}
+.badge.champ{background:rgba(201,168,76,0.18);color:#7a5c1e;border:1px solid rgba(201,168,76,0.45);}
+.badge.playoff{background:rgba(45,90,61,0.1);color:var(--green-600);border:1px solid rgba(45,90,61,0.2);}
+.legend{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:0.6rem;}
+.legend span{display:flex;align-items:center;gap:0.4rem;font-size:0.72rem;color:var(--text-faint);}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;}
+.dot-p{background:rgba(45,90,61,0.45);}
+.dot-c{background:var(--gold-500);}
+footer{background:var(--green-900);border-top:1px solid rgba(201,168,76,0.1);text-align:center;padding:2.5rem 2rem;}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.1em;color:var(--gold-500);margin-bottom:0.75rem;}
+.footer-links{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-bottom:1rem;}
+.footer-link{font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s;}
+.footer-link:hover{color:var(--gold-400);}
+.footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.2);letter-spacing:0.05em;}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="index.html">TGC</a>
+  <div class="navbar-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="rules.html">Rules</a>
+    <a class="nav-link active" href="standings.html">Standings</a>
+    <a class="nav-link" href="draft.html">Draft History</a>
+    <a class="nav-link" href="#">Matchups</a>
+    <a class="nav-link" href="#">Analytics</a>
+    <a class="nav-link" href="#">Records</a>
+    <a class="nav-link" href="scoring.html">Scoring</a>
+    <a class="nav-link" href="#">Stats</a>
+  </div>
+</nav>
+<header class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-eyebrow">The Grove Championship · All-Time Results</div>
+    <h1 class="page-title">Standings</h1>
+    <p class="page-sub">10 Seasons · 2016–2025 · Final regular season standings for each year</p>
+  </div>
+</header>
+<div class="year-filter">
+  <span class="filter-label">Jump to:</span>
+  <button class="yr-btn active" onclick="showYear('all')">All Years</button>
+  <button class="yr-btn" onclick="showYear('2025')">2025</button>
+  <button class="yr-btn" onclick="showYear('2024')">2024</button>
+  <button class="yr-btn" onclick="showYear('2023')">2023</button>
+  <button class="yr-btn" onclick="showYear('2022')">2022</button>
+  <button class="yr-btn" onclick="showYear('2021')">2021</button>
+  <button class="yr-btn" onclick="showYear('2020')">2020</button>
+  <button class="yr-btn" onclick="showYear('2019')">2019</button>
+  <button class="yr-btn" onclick="showYear('2018')">2018</button>
+  <button class="yr-btn" onclick="showYear('2017')">2017</button>
+  <button class="yr-btn" onclick="showYear('2016')">2016</button>
+</div>
+<main class="page">
+      <div class="season-block" id="s2025" data-year="2025">
+        <div class="season-header">
+          <span class="season-label">2025 Season</span>
+          <span class="team-count">12 Teams</span>
+        </div>
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Team</th><th>W</th><th>L</th><th>PF</th><th>PA</th><th>Streak</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr class="playoff-row">
+          <td class="rank-cell">1</td>
+          <td class="team-name">Nicky’s Off-Season <span class="badge champ">Champion</span></td>
+          <td class="num">9</td>
+          <td class="num">5</td>
+          <td class="num">2,320.64</td>
+          <td class="num">2,170.52</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">2</td>
+          <td class="team-name">Al's Brandon Bruiser <span class="badge playoff">Playoff</span></td>
+          <td class="num">8</td>
+          <td class="num">6</td>
+          <td class="num">2,224.78</td>
+          <td class="num">2,274.73</td>
+          <td class="num">W-2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">3</td>
+          <td class="team-name">The Vagitarians <span class="badge playoff">Playoff</span></td>
+          <td class="num">9</td>
+          <td class="num">5</td>
+          <td class="num">2,492.56</td>
+          <td class="num">2,324.13</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">4</td>
+          <td class="team-name">Antonio <span class="badge playoff">Playoff</span></td>
+          <td class="num">9</td>
+          <td class="num">5</td>
+          <td class="num">2,546.92</td>
+          <td class="num">2,315.45</td>
+          <td class="num">W-7</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">5</td>
+          <td class="team-name">Ram Man <span class="badge playoff">Playoff</span></td>
+          <td class="num">9</td>
+          <td class="num">5</td>
+          <td class="num">2,344.32</td>
+          <td class="num">2,192.26</td>
+          <td class="num">W-3</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">6</td>
+          <td class="team-name">Cory Harman's Nice Team <span class="badge playoff">Playoff</span></td>
+          <td class="num">8</td>
+          <td class="num">6</td>
+          <td class="num">2,294.79</td>
+          <td class="num">2,166.89</td>
+          <td class="num">L-3</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">7</td>
+          <td class="team-name">Tommy Noles <span class="badge playoff">Playoff</span></td>
+          <td class="num">5</td>
+          <td class="num">9</td>
+          <td class="num">2,234.95</td>
+          <td class="num">2,278.74</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">8</td>
+          <td class="team-name">Team Suck Me </td>
+          <td class="num">8</td>
+          <td class="num">6</td>
+          <td class="num">2,197.64</td>
+          <td class="num">2,207.40</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">9</td>
+          <td class="team-name">Cupcake Lover </td>
+          <td class="num">7</td>
+          <td class="num">7</td>
+          <td class="num">2,282.20</td>
+          <td class="num">2,224.32</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">10</td>
+          <td class="team-name">Devere's Remarkable Team </td>
+          <td class="num">5</td>
+          <td class="num">9</td>
+          <td class="num">2,115.52</td>
+          <td class="num">2,281.97</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">11</td>
+          <td class="team-name">Kirk Thuggins </td>
+          <td class="num">4</td>
+          <td class="num">10</td>
+          <td class="num">2,123.92</td>
+          <td class="num">2,486.32</td>
+          <td class="num">L-2</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">12</td>
+          <td class="team-name">Big Daddy </td>
+          <td class="num">3</td>
+          <td class="num">11</td>
+          <td class="num">2,110.61</td>
+          <td class="num">2,366.12</td>
+          <td class="num">L-4</td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="season-block" id="s2024" data-year="2024">
+        <div class="season-header">
+          <span class="season-label">2024 Season</span>
+          <span class="team-count">12 Teams</span>
+        </div>
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Team</th><th>W</th><th>L</th><th>PF</th><th>PA</th><th>Streak</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr class="playoff-row">
+          <td class="rank-cell">1</td>
+          <td class="team-name">Team Suck Me <span class="badge champ">Champion</span></td>
+          <td class="num">9</td>
+          <td class="num">5</td>
+          <td class="num">2,446.56</td>
+          <td class="num">2,231.08</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">2</td>
+          <td class="team-name">Devere's Remarkable Team <span class="badge playoff">Playoff</span></td>
+          <td class="num">8</td>
+          <td class="num">6</td>
+          <td class="num">2,271.87</td>
+          <td class="num">2,096.51</td>
+          <td class="num">L-4</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">3</td>
+          <td class="team-name">Cory Harman's Nice Team <span class="badge playoff">Playoff</span></td>
+          <td class="num">11</td>
+          <td class="num">3</td>
+          <td class="num">2,399.76</td>
+          <td class="num">2,250.94</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">4</td>
+          <td class="team-name">Cupcake Lover 445 <span class="badge playoff">Playoff</span></td>
+          <td class="num">8</td>
+          <td class="num">6</td>
+          <td class="num">2,392.23</td>
+          <td class="num">2,313.84</td>
+          <td class="num">W-3</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">5</td>
+          <td class="team-name">Antonio <span class="badge playoff">Playoff</span></td>
+          <td class="num">7</td>
+          <td class="num">7</td>
+          <td class="num">2,287.30</td>
+          <td class="num">2,401.19</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">6</td>
+          <td class="team-name">Al's Brandon Bruiser <span class="badge playoff">Playoff</span></td>
+          <td class="num">8</td>
+          <td class="num">6</td>
+          <td class="num">2,159.99</td>
+          <td class="num">2,176.80</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">7</td>
+          <td class="team-name">Ram Man <span class="badge playoff">Playoff</span></td>
+          <td class="num">5</td>
+          <td class="num">9</td>
+          <td class="num">2,016.02</td>
+          <td class="num">2,320.66</td>
+          <td class="num">W-2</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">8</td>
+          <td class="team-name">Tommy Noles </td>
+          <td class="num">6</td>
+          <td class="num">8</td>
+          <td class="num">2,386.56</td>
+          <td class="num">2,421.88</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">9</td>
+          <td class="team-name">Big Daddy </td>
+          <td class="num">6</td>
+          <td class="num">8</td>
+          <td class="num">2,241.44</td>
+          <td class="num">2,245.09</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">10</td>
+          <td class="team-name">The Vagitarians </td>
+          <td class="num">6</td>
+          <td class="num">8</td>
+          <td class="num">2,411.63</td>
+          <td class="num">2,279.79</td>
+          <td class="num">W-2</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">11</td>
+          <td class="team-name">Kirk Thuggins </td>
+          <td class="num">6</td>
+          <td class="num">8</td>
+          <td class="num">2,230.54</td>
+          <td class="num">2,203.81</td>
+          <td class="num">L-2</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">12</td>
+          <td class="team-name">Nicky’s Off-Season </td>
+          <td class="num">4</td>
+          <td class="num">10</td>
+          <td class="num">2,016.64</td>
+          <td class="num">2,318.95</td>
+          <td class="num">L-2</td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="season-block" id="s2023" data-year="2023">
+        <div class="season-header">
+          <span class="season-label">2023 Season</span>
+          <span class="team-count">10 Teams</span>
+        </div>
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Team</th><th>W</th><th>L</th><th>PF</th><th>PA</th><th>Streak</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr class="playoff-row">
+          <td class="rank-cell">1</td>
+          <td class="team-name">Big Daddy <span class="badge champ">Champion</span></td>
+          <td class="num">7</td>
+          <td class="num">6</td>
+          <td class="num">2,252.96</td>
+          <td class="num">2,231.36</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">2</td>
+          <td class="team-name">Tommy Noles <span class="badge playoff">Playoff</span></td>
+          <td class="num">8</td>
+          <td class="num">5</td>
+          <td class="num">2,101.95</td>
+          <td class="num">2,143.14</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">3</td>
+          <td class="team-name">Antonio <span class="badge playoff">Playoff</span></td>
+          <td class="num">8</td>
+          <td class="num">5</td>
+          <td class="num">2,175.67</td>
+          <td class="num">2,083.54</td>
+          <td class="num">W-2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">4</td>
+          <td class="team-name">Nicky’s Off-Season <span class="badge playoff">Playoff</span></td>
+          <td class="num">9</td>
+          <td class="num">4</td>
+          <td class="num">2,243.96</td>
+          <td class="num">2,019.78</td>
+          <td class="num">W-3</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">5</td>
+          <td class="team-name">Team Suck Me <span class="badge playoff">Playoff</span></td>
+          <td class="num">7</td>
+          <td class="num">6</td>
+          <td class="num">2,235.70</td>
+          <td class="num">2,221.10</td>
+          <td class="num">W-2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">6</td>
+          <td class="team-name">Killer B’s <span class="badge playoff">Playoff</span></td>
+          <td class="num">7</td>
+          <td class="num">6</td>
+          <td class="num">2,192.53</td>
+          <td class="num">2,163.13</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">7</td>
+          <td class="team-name">The Vagitarians </td>
+          <td class="num">6</td>
+          <td class="num">7</td>
+          <td class="num">2,233.70</td>
+          <td class="num">2,227.98</td>
+          <td class="num">L-2</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">8</td>
+          <td class="team-name">The Real Slim Brady </td>
+          <td class="num">6</td>
+          <td class="num">7</td>
+          <td class="num">2,033.32</td>
+          <td class="num">1,998.71</td>
+          <td class="num">L-3</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">9</td>
+          <td class="team-name">Al's Brandon Bruiser </td>
+          <td class="num">3</td>
+          <td class="num">10</td>
+          <td class="num">2,008.37</td>
+          <td class="num">2,178.30</td>
+          <td class="num">L-7</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">10</td>
+          <td class="team-name">LIKE A BROCK </td>
+          <td class="num">4</td>
+          <td class="num">9</td>
+          <td class="num">2,001.94</td>
+          <td class="num">2,213.06</td>
+          <td class="num">L-1</td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="season-block" id="s2022" data-year="2022">
+        <div class="season-header">
+          <span class="season-label">2022 Season</span>
+          <span class="team-count">10 Teams</span>
+        </div>
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Team</th><th>W</th><th>L</th><th>PF</th><th>PA</th><th>Streak</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr class="playoff-row">
+          <td class="rank-cell">1</td>
+          <td class="team-name">Al's Brandon Bruiser <span class="badge champ">Champion</span></td>
+          <td class="num">4</td>
+          <td class="num">9</td>
+          <td class="num">1,914.12</td>
+          <td class="num">2,059.02</td>
+          <td class="num">L-2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">2</td>
+          <td class="team-name">Team Suck Me <span class="badge playoff">Playoff</span></td>
+          <td class="num">9</td>
+          <td class="num">4</td>
+          <td class="num">2,042.16</td>
+          <td class="num">1,828.50</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">3</td>
+          <td class="team-name">Tommy Noles <span class="badge playoff">Playoff</span></td>
+          <td class="num">7</td>
+          <td class="num">6</td>
+          <td class="num">2,095.24</td>
+          <td class="num">2,080.21</td>
+          <td class="num">W-2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">4</td>
+          <td class="team-name">Antonio <span class="badge playoff">Playoff</span></td>
+          <td class="num">7</td>
+          <td class="num">6</td>
+          <td class="num">2,042.74</td>
+          <td class="num">1,982.56</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">5</td>
+          <td class="team-name">TAKE MY MONEY <span class="badge playoff">Playoff</span></td>
+          <td class="num">8</td>
+          <td class="num">5</td>
+          <td class="num">2,045.79</td>
+          <td class="num">2,002.27</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">6</td>
+          <td class="team-name">The Real Slim Brady <span class="badge playoff">Playoff</span></td>
+          <td class="num">5</td>
+          <td class="num">8</td>
+          <td class="num">1,963.46</td>
+          <td class="num">1,970.80</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">7</td>
+          <td class="team-name">Big Daddy </td>
+          <td class="num">8</td>
+          <td class="num">5</td>
+          <td class="num">2,181.22</td>
+          <td class="num">2,137.41</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">8</td>
+          <td class="team-name">Los Tigres </td>
+          <td class="num">10</td>
+          <td class="num">3</td>
+          <td class="num">2,056.94</td>
+          <td class="num">1,893.30</td>
+          <td class="num">W-3</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">9</td>
+          <td class="team-name">The Vagitarians </td>
+          <td class="num">4</td>
+          <td class="num">9</td>
+          <td class="num">1,844.81</td>
+          <td class="num">1,962.50</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">10</td>
+          <td class="team-name">Nicky’s Off-Season </td>
+          <td class="num">3</td>
+          <td class="num">10</td>
+          <td class="num">1,764.35</td>
+          <td class="num">2,034.26</td>
+          <td class="num">L-2</td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="season-block" id="s2021" data-year="2021">
+        <div class="season-header">
+          <span class="season-label">2021 Season</span>
+          <span class="team-count">10 Teams</span>
+        </div>
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Team</th><th>W</th><th>L</th><th>PF</th><th>PA</th><th>Streak</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr class="playoff-row">
+          <td class="rank-cell">1</td>
+          <td class="team-name">Big Daddy <span class="badge champ">Champion</span></td>
+          <td class="num">8</td>
+          <td class="num">5</td>
+          <td class="num">2,136.71</td>
+          <td class="num">1,972.34</td>
+          <td class="num">W-2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">2</td>
+          <td class="team-name">Antonio <span class="badge playoff">Playoff</span></td>
+          <td class="num">6</td>
+          <td class="num">7</td>
+          <td class="num">2,142.03</td>
+          <td class="num">2,146.02</td>
+          <td class="num">L-2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">3</td>
+          <td class="team-name">ngar’s shitty team <span class="badge playoff">Playoff</span></td>
+          <td class="num">6</td>
+          <td class="num">7</td>
+          <td class="num">2,003.22</td>
+          <td class="num">1,953.04</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">4</td>
+          <td class="team-name">Team Suck Me <span class="badge playoff">Playoff</span></td>
+          <td class="num">7</td>
+          <td class="num">6</td>
+          <td class="num">2,061.62</td>
+          <td class="num">2,052.67</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">5</td>
+          <td class="team-name">Bulls Mafia <span class="badge playoff">Playoff</span></td>
+          <td class="num">6</td>
+          <td class="num">7</td>
+          <td class="num">2,099.49</td>
+          <td class="num">2,043.07</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">6</td>
+          <td class="team-name">Tommy Noles <span class="badge playoff">Playoff</span></td>
+          <td class="num">10</td>
+          <td class="num">3</td>
+          <td class="num">2,273.42</td>
+          <td class="num">2,051.61</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">7</td>
+          <td class="team-name">The Real Slim Brady </td>
+          <td class="num">6</td>
+          <td class="num">7</td>
+          <td class="num">2,037.60</td>
+          <td class="num">2,050.01</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">8</td>
+          <td class="team-name">Al's Brandon Bruiser </td>
+          <td class="num">7</td>
+          <td class="num">6</td>
+          <td class="num">1,990.20</td>
+          <td class="num">2,040.58</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">9</td>
+          <td class="team-name">TAKE MY MONEY </td>
+          <td class="num">5</td>
+          <td class="num">8</td>
+          <td class="num">1,936.88</td>
+          <td class="num">2,204.35</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">10</td>
+          <td class="team-name">The Vagitarians </td>
+          <td class="num">4</td>
+          <td class="num">9</td>
+          <td class="num">1,944.35</td>
+          <td class="num">2,111.83</td>
+          <td class="num">L-1</td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="season-block" id="s2020" data-year="2020">
+        <div class="season-header">
+          <span class="season-label">2020 Season</span>
+          <span class="team-count">10 Teams</span>
+        </div>
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Team</th><th>W</th><th>L</th><th>PF</th><th>PA</th><th>Streak</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr class="playoff-row">
+          <td class="rank-cell">1</td>
+          <td class="team-name">Antonio <span class="badge champ">Champion</span></td>
+          <td class="num">9</td>
+          <td class="num">4</td>
+          <td class="num">2,297.17</td>
+          <td class="num">1,956.97</td>
+          <td class="num">W-3</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">2</td>
+          <td class="team-name">Captain Col <span class="badge playoff">Playoff</span></td>
+          <td class="num">9</td>
+          <td class="num">4</td>
+          <td class="num">1,985.00</td>
+          <td class="num">1,787.39</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">3</td>
+          <td class="team-name">Big D <span class="badge playoff">Playoff</span></td>
+          <td class="num">8</td>
+          <td class="num">5</td>
+          <td class="num">2,005.99</td>
+          <td class="num">1,967.55</td>
+          <td class="num">W-2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">4</td>
+          <td class="team-name">Al's Brandon Bruiser <span class="badge playoff">Playoff</span></td>
+          <td class="num">8</td>
+          <td class="num">5</td>
+          <td class="num">1,828.90</td>
+          <td class="num">1,839.96</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">5</td>
+          <td class="team-name">Beats by Ray <span class="badge playoff">Playoff</span></td>
+          <td class="num">6</td>
+          <td class="num">7</td>
+          <td class="num">1,979.83</td>
+          <td class="num">1,973.77</td>
+          <td class="num">L-2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">6</td>
+          <td class="team-name">The Vagitarians <span class="badge playoff">Playoff</span></td>
+          <td class="num">7</td>
+          <td class="num">6</td>
+          <td class="num">1,942.23</td>
+          <td class="num">1,946.09</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">7</td>
+          <td class="team-name">JPPs Fireworks Inc. </td>
+          <td class="num">5</td>
+          <td class="num">8</td>
+          <td class="num">1,851.32</td>
+          <td class="num">1,889.04</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">8</td>
+          <td class="team-name">Tommy Noles </td>
+          <td class="num">6</td>
+          <td class="num">7</td>
+          <td class="num">1,976.42</td>
+          <td class="num">1,931.87</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">9</td>
+          <td class="team-name">Devere's Team </td>
+          <td class="num">4</td>
+          <td class="num">9</td>
+          <td class="num">1,742.50</td>
+          <td class="num">2,053.56</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">10</td>
+          <td class="team-name">Nicholas's Team </td>
+          <td class="num">3</td>
+          <td class="num">10</td>
+          <td class="num">1,740.69</td>
+          <td class="num">2,003.85</td>
+          <td class="num">L-9</td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="season-block" id="s2019" data-year="2019">
+        <div class="season-header">
+          <span class="season-label">2019 Season</span>
+          <span class="team-count">10 Teams</span>
+        </div>
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Team</th><th>W</th><th>L</th><th>PF</th><th>PA</th><th>Streak</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr class="playoff-row">
+          <td class="rank-cell">1</td>
+          <td class="team-name">Tommy Noles <span class="badge champ">Champion</span></td>
+          <td class="num">6</td>
+          <td class="num">7</td>
+          <td class="num">2,097.19</td>
+          <td class="num">2,030.02</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">2</td>
+          <td class="team-name">giovanny's Team <span class="badge playoff">Playoff</span></td>
+          <td class="num">9</td>
+          <td class="num">4</td>
+          <td class="num">2,010.58</td>
+          <td class="num">1,918.70</td>
+          <td class="num">L-2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">3</td>
+          <td class="team-name">Devere's Team <span class="badge playoff">Playoff</span></td>
+          <td class="num">8</td>
+          <td class="num">5</td>
+          <td class="num">1,960.81</td>
+          <td class="num">1,844.92</td>
+          <td class="num">W-2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">4</td>
+          <td class="team-name">Tyreek’s Kid Beaters <span class="badge playoff">Playoff</span></td>
+          <td class="num">6</td>
+          <td class="num">7</td>
+          <td class="num">1,863.91</td>
+          <td class="num">1,812.55</td>
+          <td class="num">L-2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">5</td>
+          <td class="team-name">The Vagitarians <span class="badge playoff">Playoff</span></td>
+          <td class="num">7</td>
+          <td class="num">6</td>
+          <td class="num">1,896.77</td>
+          <td class="num">1,957.87</td>
+          <td class="num">W-3</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">6</td>
+          <td class="team-name">Antonio <span class="badge playoff">Playoff</span></td>
+          <td class="num">8</td>
+          <td class="num">5</td>
+          <td class="num">1,981.26</td>
+          <td class="num">1,861.13</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">7</td>
+          <td class="team-name">Captain Col </td>
+          <td class="num">9</td>
+          <td class="num">4</td>
+          <td class="num">1,955.50</td>
+          <td class="num">1,782.08</td>
+          <td class="num">W-4</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">8</td>
+          <td class="team-name">Al's Brandon Bruiser </td>
+          <td class="num">6</td>
+          <td class="num">7</td>
+          <td class="num">1,835.01</td>
+          <td class="num">2,005.28</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">9</td>
+          <td class="team-name">Big D </td>
+          <td class="num">5</td>
+          <td class="num">8</td>
+          <td class="num">1,882.79</td>
+          <td class="num">2,019.79</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">10</td>
+          <td class="team-name">Nicholas's Team </td>
+          <td class="num">1</td>
+          <td class="num">12</td>
+          <td class="num">1,755.09</td>
+          <td class="num">2,006.57</td>
+          <td class="num">L-4</td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="season-block" id="s2018" data-year="2018">
+        <div class="season-header">
+          <span class="season-label">2018 Season</span>
+          <span class="team-count">10 Teams</span>
+        </div>
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Team</th><th>W</th><th>L</th><th>PF</th><th>PA</th><th>Streak</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr class="playoff-row">
+          <td class="rank-cell">1</td>
+          <td class="team-name">giovanny's Team <span class="badge champ">Champion</span></td>
+          <td class="num">9</td>
+          <td class="num">6</td>
+          <td class="num">2,528.67</td>
+          <td class="num">2,307.00</td>
+          <td class="num">W-4</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">2</td>
+          <td class="team-name">Larry's Team <span class="badge playoff">Playoff</span></td>
+          <td class="num">9</td>
+          <td class="num">6</td>
+          <td class="num">2,557.55</td>
+          <td class="num">2,411.60</td>
+          <td class="num">W-4</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">3</td>
+          <td class="team-name">Tom's Fabulous Team <span class="badge playoff">Playoff</span></td>
+          <td class="num">14</td>
+          <td class="num">1</td>
+          <td class="num">2,817.36</td>
+          <td class="num">2,188.40</td>
+          <td class="num">W-2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">4</td>
+          <td class="team-name">Dominic's Team <span class="badge playoff">Playoff</span></td>
+          <td class="num">9</td>
+          <td class="num">6</td>
+          <td class="num">2,595.54</td>
+          <td class="num">2,306.51</td>
+          <td class="num">W-5</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">5</td>
+          <td class="team-name">zach's Awesome Team <span class="badge playoff">Playoff</span></td>
+          <td class="num">7</td>
+          <td class="num">8</td>
+          <td class="num">2,412.03</td>
+          <td class="num">2,513.01</td>
+          <td class="num">L-3</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">6</td>
+          <td class="team-name">Dylan is #1 <span class="badge playoff">Playoff</span></td>
+          <td class="num">8</td>
+          <td class="num">7</td>
+          <td class="num">2,597.04</td>
+          <td class="num">2,536.06</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">7</td>
+          <td class="team-name">Captain Col </td>
+          <td class="num">8</td>
+          <td class="num">7</td>
+          <td class="num">2,307.74</td>
+          <td class="num">2,379.82</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">8</td>
+          <td class="team-name">Devere's Team </td>
+          <td class="num">5</td>
+          <td class="num">10</td>
+          <td class="num">2,467.76</td>
+          <td class="num">2,643.20</td>
+          <td class="num">L-2</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">9</td>
+          <td class="team-name">Al's Agreeable Team </td>
+          <td class="num">4</td>
+          <td class="num">11</td>
+          <td class="num">2,050.44</td>
+          <td class="num">2,496.78</td>
+          <td class="num">L-2</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">10</td>
+          <td class="team-name">Nicholas's Team </td>
+          <td class="num">2</td>
+          <td class="num">13</td>
+          <td class="num">1,910.69</td>
+          <td class="num">2,462.44</td>
+          <td class="num">L-7</td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="season-block" id="s2017" data-year="2017">
+        <div class="season-header">
+          <span class="season-label">2017 Season</span>
+          <span class="team-count">8 Teams</span>
+        </div>
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Team</th><th>W</th><th>L</th><th>PF</th><th>PA</th><th>Streak</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr class="playoff-row">
+          <td class="rank-cell">1</td>
+          <td class="team-name">Larry's Team <span class="badge champ">Champion</span></td>
+          <td class="num">12</td>
+          <td class="num">3</td>
+          <td class="num">2,674.09</td>
+          <td class="num">2,118.16</td>
+          <td class="num">W-5</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">2</td>
+          <td class="team-name">Dylan is #1 <span class="badge playoff">Playoff</span></td>
+          <td class="num">9</td>
+          <td class="num">6</td>
+          <td class="num">2,472.15</td>
+          <td class="num">2,298.54</td>
+          <td class="num">W-2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">3</td>
+          <td class="team-name">Seminoles Suck <span class="badge playoff">Playoff</span></td>
+          <td class="num">10</td>
+          <td class="num">5</td>
+          <td class="num">2,255.02</td>
+          <td class="num">2,117.48</td>
+          <td class="num">L-2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">4</td>
+          <td class="team-name">Nicholas's Team <span class="badge playoff">Playoff</span></td>
+          <td class="num">8</td>
+          <td class="num">7</td>
+          <td class="num">2,111.80</td>
+          <td class="num">2,175.79</td>
+          <td class="num">W-4</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">5</td>
+          <td class="team-name">Tom's Fabulous Team </td>
+          <td class="num">6</td>
+          <td class="num">9</td>
+          <td class="num">2,377.56</td>
+          <td class="num">2,289.51</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">6</td>
+          <td class="team-name">Devere's Team </td>
+          <td class="num">8</td>
+          <td class="num">7</td>
+          <td class="num">2,073.65</td>
+          <td class="num">2,103.53</td>
+          <td class="num">L-2</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">7</td>
+          <td class="team-name">Matt's Team </td>
+          <td class="num">4</td>
+          <td class="num">11</td>
+          <td class="num">1,817.70</td>
+          <td class="num">2,249.11</td>
+          <td class="num">L-5</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">8</td>
+          <td class="team-name">Al's Agreeable Team </td>
+          <td class="num">3</td>
+          <td class="num">12</td>
+          <td class="num">1,852.85</td>
+          <td class="num">2,282.70</td>
+          <td class="num">W-1</td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="season-block" id="s2016" data-year="2016">
+        <div class="season-header">
+          <span class="season-label">2016 Season</span>
+          <span class="team-count">8 Teams</span>
+        </div>
+        <table class="standings-table">
+          <thead>
+            <tr>
+              <th>#</th><th>Team</th><th>W</th><th>L</th><th>PF</th><th>PA</th><th>Streak</th>
+            </tr>
+          </thead>
+          <tbody>
+        <tr class="playoff-row">
+          <td class="rank-cell">1</td>
+          <td class="team-name">Larry's Team <span class="badge champ">Champion</span></td>
+          <td class="num">11</td>
+          <td class="num">4</td>
+          <td class="num">1,589.06</td>
+          <td class="num">1,138.08</td>
+          <td class="num">W-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">2</td>
+          <td class="team-name">Tom's Wondrous Team <span class="badge playoff">Playoff</span></td>
+          <td class="num">10</td>
+          <td class="num">5</td>
+          <td class="num">1,437.94</td>
+          <td class="num">1,412.86</td>
+          <td class="num">W-4</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">3</td>
+          <td class="team-name">Dylan is #1 <span class="badge playoff">Playoff</span></td>
+          <td class="num">11</td>
+          <td class="num">4</td>
+          <td class="num">1,421.72</td>
+          <td class="num">1,255.98</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">4</td>
+          <td class="team-name">Al's Agreeable Team <span class="badge playoff">Playoff</span></td>
+          <td class="num">9</td>
+          <td class="num">6</td>
+          <td class="num">1,377.20</td>
+          <td class="num">1,361.72</td>
+          <td class="num">W-3</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">5</td>
+          <td class="team-name">tammy's Team </td>
+          <td class="num">3</td>
+          <td class="num">12</td>
+          <td class="num">1,298.00</td>
+          <td class="num">1,550.40</td>
+          <td class="num">L-2</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">6</td>
+          <td class="team-name">Noisy Neighbors </td>
+          <td class="num">5</td>
+          <td class="num">10</td>
+          <td class="num">1,194.78</td>
+          <td class="num">1,379.52</td>
+          <td class="num">L-1</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">7</td>
+          <td class="team-name">Matt's Optimal Team </td>
+          <td class="num">7</td>
+          <td class="num">8</td>
+          <td class="num">1,231.16</td>
+          <td class="num">1,369.88</td>
+          <td class="num">L-3</td>
+        </tr>
+        <tr class="">
+          <td class="rank-cell">8</td>
+          <td class="team-name">Nicholas's Team </td>
+          <td class="num">4</td>
+          <td class="num">11</td>
+          <td class="num">1,269.32</td>
+          <td class="num">1,350.74</td>
+          <td class="num">W-1</td>
+        </tr>
+          </tbody>
+        </table>
+      </div>
+  <div class="legend">
+    <span><span class="dot dot-c"></span> Champion</span>
+    <span><span class="dot dot-p"></span> Playoff team</span>
+    <span>Playoff cutoff: Top 7 teams (12-team years) · Top 6 teams (10-team years) · Top 4 teams (8-team years)</span>
+  </div>
+</main>
+<footer>
+  <div class="footer-logo">The Grove Championship</div>
+  <div class="footer-links">
+    <a class="footer-link" href="index.html">Home</a>
+    <a class="footer-link" href="rules.html">Rules</a>
+    <a class="footer-link" href="standings.html">Standings</a>
+    <a class="footer-link" href="draft.html">Draft History</a>
+    <a class="footer-link" href="scoring.html">Scoring</a>
+  </div>
+  <p class="footer-copy">The Grove Championship · Est. 2016 · Sleeper Fantasy Football</p>
+</footer>
+<script>
+function showYear(year) {
+  document.querySelectorAll('.yr-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.season-block').forEach(b => {
+    b.style.display = (year === 'all' || b.dataset.year === year) ? '' : 'none';
+  });
+  if (year !== 'all') {
+    const el = document.getElementById('s' + year);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+</script>
+</body>
+</html>
