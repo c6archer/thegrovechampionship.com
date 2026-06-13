@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Scoring Settings | The Grove Championship</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green-900: #0b1f14;
+  --green-800: #112a1c;
+  --green-700: #1a3a2a;
+  --green-600: #2d5a3d;
+  --green-500: #3d7a52;
+  --gold-500: #c9a84c;
+  --gold-400: #dbbe72;
+  --gold-300: #ead49a;
+  --cream: #faf7f0;
+  --text-dark: #0f1f16;
+  --text-mid: #2d4a38;
+  --text-muted: #5a7060;
+  --text-faint: #8a9e90;
+  --section-border: rgba(201,168,76,0.2);
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text-dark); }
+
+/* ── NAVBAR ── */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(11,31,20,0.96); backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  height: 60px; display: flex; align-items: center; padding: 0 2rem; gap: 2rem;
+}
+.navbar-brand { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.08em; color: var(--gold-500); text-decoration: none; white-space: nowrap; flex-shrink: 0; }
+.navbar-links { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; margin-left: auto; }
+.navbar-links::-webkit-scrollbar { display: none; }
+.nav-link { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5); text-decoration: none; padding: 0.5rem 0.9rem; border-radius: 4px; white-space: nowrap; transition: color 0.2s, background 0.2s; }
+.nav-link:hover { color: var(--gold-400); background: rgba(201,168,76,0.08); }
+.nav-link.active { color: var(--gold-500); }
+
+/* ── PAGE HERO ── */
+.page-hero { background: var(--green-900); padding: 7rem 2rem 3.5rem; position: relative; overflow: hidden; }
+.page-hero::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent, transparent 58px, rgba(201,168,76,0.05) 58px, rgba(201,168,76,0.05) 60px); pointer-events: none; }
+.page-hero-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+.page-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold-500); margin-bottom: 0.75rem; }
+.page-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem); letter-spacing: 0.05em; color: #fff; line-height: 1; margin-bottom: 0.75rem; }
+.page-sub { font-size: 0.85rem; color: rgba(255,255,255,0.35); letter-spacing: 0.08em; font-weight: 300; }
+
+/* ── JUMP NAV ── */
+.jump-nav { background: var(--green-700); border-bottom: 1px solid rgba(201,168,76,0.15); padding: 0 2rem; display: flex; overflow-x: auto; scrollbar-width: none; }
+.jump-nav::-webkit-scrollbar { display: none; }
+.jump-link { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.45); text-decoration: none; padding: 0.9rem 1rem; white-space: nowrap; border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; }
+.jump-link:hover { color: var(--gold-400); border-bottom-color: var(--gold-500); }
+
+/* ── LAYOUT ── */
+.page { max-width: 1100px; margin: 0 auto; padding: 4rem 2rem 6rem; }
+
+/* ── SECTION ── */
+.section { margin-bottom: 4rem; scroll-margin-top: 110px; }
+.section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.75rem; padding-bottom: 1rem; border-bottom: 1px solid var(--section-border); }
+.section-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--green-700); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.section-icon svg { width: 20px; height: 20px; fill: none; stroke: var(--gold-500); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.section-num { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold-500); font-weight: 500; display: block; margin-bottom: 0.2rem; }
+.section-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.05em; color: var(--green-700); line-height: 1; }
+
+/* ── SCORING TABLE ── */
+.scoring-block { margin-bottom: 2rem; }
+.scoring-group-title { font-family: 'DM Mono', monospace; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-500); margin-bottom: 0.75rem; padding-left: 0.25rem; }
+table.scoring { width: 100%; border-collapse: collapse; border-radius: 10px; overflow: hidden; border: 1px solid var(--section-border); }
+table.scoring thead { background: var(--green-700); }
+table.scoring thead th { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.5); padding: 0.75rem 1rem; text-align: left; }
+table.scoring thead th:last-child { text-align: right; }
+table.scoring tbody tr { border-bottom: 1px solid rgba(201,168,76,0.08); transition: background 0.15s; }
+table.scoring tbody tr:last-child { border-bottom: none; }
+table.scoring tbody tr:hover { background: rgba(201,168,76,0.04); }
+table.scoring td { padding: 0.7rem 1rem; font-size: 0.88rem; color: var(--text-dark); background: #fff; }
+table.scoring td.pts { text-align: right; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--green-600); }
+table.scoring td.pts.negative { color: #b54040; }
+table.scoring td.pts.zero { color: var(--text-faint); }
+
+/* ── TWO COL ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+/* ── PREMIUM BADGE ── */
+.premium { display: inline-block; font-size: 0.6rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(201,168,76,0.15); color: #7a5c1e; border: 1px solid rgba(201,168,76,0.4); padding: 0.15rem 0.45rem; border-radius: 3px; margin-left: 0.4rem; vertical-align: middle; }
+
+/* ── CALLOUT ── */
+.callout-gold { background: rgba(201,168,76,0.08); border-left: 3px solid var(--gold-500); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; font-size: 0.88rem; line-height: 1.7; color: var(--text-dark); margin-bottom: 1.25rem; }
+.callout-gold strong { color: #7a5c1e; font-weight: 600; }
+
+/* ── FOOTER ── */
+footer { background: var(--green-900); border-top: 1px solid rgba(201,168,76,0.1); text-align: center; padding: 2.5rem 2rem; }
+.footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.1em; color: var(--gold-500); margin-bottom: 0.75rem; }
+.footer-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.footer-link { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
+.footer-link:hover { color: var(--gold-400); }
+.footer-copy { font-size: 0.72rem; color: rgba(255,255,255,0.2); letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a class="navbar-brand" href="index.html">TGC</a>
+  <div class="navbar-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="rules.html">Rules</a>
+    <a class="nav-link" href="#">Standings</a>
+    <a class="nav-link" href="#">Draft History</a>
+    <a class="nav-link" href="#">Matchups</a>
+    <a class="nav-link" href="#">Analytics</a>
+    <a class="nav-link" href="#">Records</a>
+    <a class="nav-link active" href="scoring.html">Scoring</a>
+    <a class="nav-link" href="#">Stats</a>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<header class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-eyebrow">The Grove Championship · Official League Document</div>
+    <h1 class="page-title">Scoring Settings</h1>
+    <p class="page-sub">Full PPR · TE Premium · Custom kicker & defense scoring</p>
+  </div>
+</header>
+
+<!-- JUMP NAV -->
+<div class="jump-nav">
+  <a class="jump-link" href="#passing">Passing</a>
+  <a class="jump-link" href="#rushing">Rushing</a>
+  <a class="jump-link" href="#receiving">Receiving</a>
+  <a class="jump-link" href="#kicking">Kicking</a>
+  <a class="jump-link" href="#defense">Defense</a>
+</div>
+
+<!-- MAIN -->
+<main class="page">
+
+  <!-- PASSING -->
+  <section class="section" id="passing">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+      </div>
+      <div>
+        <span class="section-num">Section 01</span>
+        <h2 class="section-title">Passing</h2>
+      </div>
+    </div>
+    <table class="scoring">
+      <thead><tr><th>Stat</th><th style="text-align:right">Points</th></tr></thead>
+      <tbody>
+        <tr><td>Passing Yards</td><td class="pts">+1 per 20 yds</td></tr>
+        <tr><td>Passing Touchdown</td><td class="pts">+6</td></tr>
+        <tr><td>Pass Completed</td><td class="pts">+0.5</td></tr>
+        <tr><td>2-Point Conversion</td><td class="pts">+2</td></tr>
+        <tr><td>Pass Intercepted</td><td class="pts negative">−2</td></tr>
+        <tr><td>Passing 1st Down</td><td class="pts zero">0</td></tr>
+        <tr><td>Pick 6 Thrown</td><td class="pts zero">0</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- RUSHING -->
+  <section class="section" id="rushing">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      </div>
+      <div>
+        <span class="section-num">Section 02</span>
+        <h2 class="section-title">Rushing</h2>
+      </div>
+    </div>
+    <table class="scoring">
+      <thead><tr><th>Stat</th><th style="text-align:right">Points</th></tr></thead>
+      <tbody>
+        <tr><td>Rushing Yards</td><td class="pts">+1 per 10 yds</td></tr>
+        <tr><td>Rushing Touchdown</td><td class="pts">+6</td></tr>
+        <tr><td>2-Point Conversion</td><td class="pts">+2</td></tr>
+        <tr><td>Rushing 1st Down</td><td class="pts zero">0</td></tr>
+        <tr><td>Rush Attempts</td><td class="pts zero">0</td></tr>
+        <tr><td>40+ Yard Rush Bonus</td><td class="pts zero">0</td></tr>
+        <tr><td>40+ Yard Rush TD Bonus</td><td class="pts zero">0</td></tr>
+        <tr><td>50+ Yard Rush TD Bonus</td><td class="pts zero">0</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- RECEIVING -->
+  <section class="section" id="receiving">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <div>
+        <span class="section-num">Section 03</span>
+        <h2 class="section-title">Receiving</h2>
+      </div>
+    </div>
+    <div class="callout-gold">
+      <strong>TE Premium:</strong> Tight ends earn <strong>1.5 points per reception</strong> (standard 1.0 + 0.5 bonus). This makes the TE position significantly more valuable than in standard PPR leagues.
+    </div>
+    <table class="scoring">
+      <thead><tr><th>Stat</th><th style="text-align:right">Points</th></tr></thead>
+      <tbody>
+        <tr><td>Reception (WR / RB)</td><td class="pts">+1.0</td></tr>
+        <tr><td>Reception (TE) <span class="premium">TE Premium</span></td><td class="pts">+1.5</td></tr>
+        <tr><td>Receiving Yards</td><td class="pts">+1 per 10 yds</td></tr>
+        <tr><td>Receiving Touchdown</td><td class="pts">+6</td></tr>
+        <tr><td>2-Point Conversion</td><td class="pts">+2</td></tr>
+        <tr><td>Receiving 1st Down</td><td class="pts zero">0</td></tr>
+        <tr><td>Reception Yardage Bonuses (0–29 yds)</td><td class="pts zero">0</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- KICKING -->
+  <section class="section" id="kicking">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM8 12h8M12 8v8"/></svg>
+      </div>
+      <div>
+        <span class="section-num">Section 04</span>
+        <h2 class="section-title">Kicking</h2>
+      </div>
+    </div>
+    <div class="two-col">
+      <div>
+        <p class="scoring-group-title">Field Goals Made</p>
+        <table class="scoring">
+          <thead><tr><th>Distance</th><th style="text-align:right">Points</th></tr></thead>
+          <tbody>
+            <tr><td>FG Made (0–19 yds)</td><td class="pts">+3</td></tr>
+            <tr><td>FG Made (20–29 yds)</td><td class="pts">+3</td></tr>
+            <tr><td>FG Made (30–39 yds)</td><td class="pts">+3</td></tr>
+            <tr><td>FG Made (40–49 yds)</td><td class="pts">+4</td></tr>
+            <tr><td>FG Made (50–59 yds)</td><td class="pts">+5</td></tr>
+            <tr><td>FG Made (60+ yds)</td><td class="pts">+6</td></tr>
+            <tr><td>Point After (PAT) Made</td><td class="pts">+1</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <p class="scoring-group-title">Misses & Penalties</p>
+        <table class="scoring">
+          <thead><tr><th>Distance</th><th style="text-align:right">Points</th></tr></thead>
+          <tbody>
+            <tr><td>FG Missed (0–19 yds)</td><td class="pts negative">−2</td></tr>
+            <tr><td>FG Missed (20–29 yds)</td><td class="pts negative">−1</td></tr>
+            <tr><td>FG Missed (30–39 yds)</td><td class="pts zero">0</td></tr>
+            <tr><td>FG Missed (40–49 yds)</td><td class="pts zero">0</td></tr>
+            <tr><td>FG Missed (50–59 yds)</td><td class="pts zero">0</td></tr>
+            <tr><td>FG Missed (60+ yds)</td><td class="pts zero">0</td></tr>
+            <tr><td>PAT Missed</td><td class="pts negative">−0.5</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEFENSE -->
+  <section class="section" id="defense">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div>
+        <span class="section-num">Section 05</span>
+        <h2 class="section-title">Defense / Special Teams</h2>
+      </div>
+    </div>
+
+    <div class="scoring-block">
+      <p class="scoring-group-title">Defensive Plays</p>
+      <table class="scoring">
+        <thead><tr><th>Stat</th><th style="text-align:right">Points</th></tr></thead>
+        <tbody>
+          <tr><td>Sacks</td><td class="pts">+2</td></tr>
+          <tr><td>Interceptions</td><td class="pts">+2</td></tr>
+          <tr><td>Fumble Recovery</td><td class="pts">+2</td></tr>
+          <tr><td>Defense Touchdown</td><td class="pts">+6</td></tr>
+          <tr><td>Safety</td><td class="pts">+2</td></tr>
+          <tr><td>Blocked Kick</td><td class="pts">+5</td></tr>
+          <tr><td>Forced Fumble</td><td class="pts">+1</td></tr>
+          <tr><td>Tackle for Loss</td><td class="pts">+0.5</td></tr>
+          <tr><td>3 and Out</td><td class="pts zero">0</td></tr>
+          <tr><td>4th Down Stop</td><td class="pts zero">0</td></tr>
+          <tr><td>Pass Defended</td><td class="pts zero">0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="scoring-block">
+      <p class="scoring-group-title">Points Allowed</p>
+      <table class="scoring">
+        <thead><tr><th>Points Allowed</th><th style="text-align:right">Fantasy Points</th></tr></thead>
+        <tbody>
+          <tr><td>0 points</td><td class="pts">+10</td></tr>
+          <tr><td>1–6 points</td><td class="pts">+7</td></tr>
+          <tr><td>7–13 points</td><td class="pts">+4</td></tr>
+          <tr><td>14–20 points</td><td class="pts">+1</td></tr>
+          <tr><td>21–27 points</td><td class="pts zero">0</td></tr>
+          <tr><td>28–34 points</td><td class="pts negative">−1</td></tr>
+          <tr><td>35+ points</td><td class="pts negative">−4</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="scoring-block">
+      <p class="scoring-group-title">Total Yards Allowed</p>
+      <table class="scoring">
+        <thead><tr><th>Yards Allowed</th><th style="text-align:right">Fantasy Points</th></tr></thead>
+        <tbody>
+          <tr><td>Less than 100 yards</td><td class="pts">+2</td></tr>
+          <tr><td>100–199 yards</td><td class="pts">+1</td></tr>
+          <tr><td>200–299 yards</td><td class="pts zero">0</td></tr>
+          <tr><td>300–349 yards</td><td class="pts zero">0</td></tr>
+          <tr><td>350–399 yards</td><td class="pts zero">0</td></tr>
+          <tr><td>400–449 yards</td><td class="pts zero">0</td></tr>
+          <tr><td>450–499 yards</td><td class="pts negative">−1</td></tr>
+          <tr><td>500–549 yards</td><td class="pts negative">−2</td></tr>
+          <tr><td>550+ yards</td><td class="pts negative">−3</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-logo">The Grove Championship</div>
+  <div class="footer-links">
+    <a class="footer-link" href="index.html">Home</a>
+    <a class="footer-link" href="rules.html">Rules</a>
+    <a class="footer-link" href="scoring.html">Scoring</a>
+    <a class="footer-link" href="#">Standings</a>
+    <a class="footer-link" href="#">Draft History</a>
+    <a class="footer-link" href="#">Analytics</a>
+    <a class="footer-link" href="#">Records</a>
+  </div>
+  <p class="footer-copy">The Grove Championship · Est. 2016 · Sleeper Fantasy Football</p>
+</footer>
+
+</body>
+</html>

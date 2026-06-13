@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rules & Regulations | The Grove Championship</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green-900: #0b1f14;
+  --green-800: #112a1c;
+  --green-700: #1a3a2a;
+  --green-600: #2d5a3d;
+  --green-500: #3d7a52;
+  --gold-500: #c9a84c;
+  --gold-400: #dbbe72;
+  --gold-300: #ead49a;
+  --cream: #faf7f0;
+  --text-dark: #0f1f16;
+  --text-mid: #2d4a38;
+  --text-muted: #5a7060;
+  --text-faint: #8a9e90;
+  --section-border: rgba(201,168,76,0.2);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+}
+
+/* ── NAVBAR ── */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  background: rgba(11,31,20,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  gap: 2rem;
+}
+.navbar-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  color: var(--gold-500);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.navbar-links {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-left: auto;
+}
+.navbar-links::-webkit-scrollbar { display: none; }
+.nav-link {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: color 0.2s, background 0.2s;
+}
+.nav-link:hover { color: var(--gold-400); background: rgba(201,168,76,0.08); }
+.nav-link.active { color: var(--gold-500); }
+
+/* ── PAGE HERO ── */
+.page-hero {
+  background: var(--green-900);
+  padding: 7rem 2rem 3.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 58px, rgba(201,168,76,0.05) 58px, rgba(201,168,76,0.05) 60px);
+  pointer-events: none;
+}
+.page-hero-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+}
+.page-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  margin-bottom: 0.75rem;
+}
+.page-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  letter-spacing: 0.05em;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+.page-sub {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.08em;
+  font-weight: 300;
+}
+
+/* ── JUMP NAV ── */
+.jump-nav {
+  background: var(--green-700);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  padding: 0 2rem;
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 100%;
+}
+.jump-nav::-webkit-scrollbar { display: none; }
+.jump-link {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  text-decoration: none;
+  padding: 0.9rem 1rem;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.jump-link:hover { color: var(--gold-400); border-bottom-color: var(--gold-500); }
+
+/* ── LAYOUT ── */
+.page { max-width: 1100px; margin: 0 auto; padding: 4rem 2rem 6rem; }
+
+/* ── SECTION ── */
+.section { margin-bottom: 4rem; scroll-margin-top: 110px; }
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--section-border);
+}
+.section-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--green-700);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.section-icon svg { width: 20px; height: 20px; fill: var(--gold-500); }
+.section-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.05em;
+  color: var(--green-700);
+  line-height: 1;
+}
+
+/* ── CARDS ── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  background: var(--section-border);
+  border: 1px solid var(--section-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.card { background: #fff; padding: 1.25rem 1.5rem; }
+.card-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+.card-value { font-size: 0.95rem; font-weight: 500; color: var(--text-dark); line-height: 1.3; }
+.card-value.highlight { color: var(--green-700); font-weight: 600; font-size: 1.05rem; }
+
+/* ── SCORING TABLE ── */
+.scoring-block { margin-bottom: 2rem; }
+.scoring-group-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  margin-bottom: 0.75rem;
+  padding-left: 0.25rem;
+}
+table.scoring {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--section-border);
+}
+table.scoring thead { background: var(--green-700); }
+table.scoring thead th {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+table.scoring thead th:last-child { text-align: right; }
+table.scoring tbody tr {
+  border-bottom: 1px solid rgba(201,168,76,0.08);
+  transition: background 0.15s;
+}
+table.scoring tbody tr:last-child { border-bottom: none; }
+table.scoring tbody tr:hover { background: rgba(201,168,76,0.04); }
+table.scoring td { padding: 0.7rem 1rem; font-size: 0.88rem; color: var(--text-dark); background: #fff; }
+table.scoring td.pts { text-align: right; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--green-600); }
+table.scoring td.pts.negative { color: #b54040; }
+table.scoring td.pts.zero { color: var(--text-faint); }
+table.scoring td.note { font-size: 0.78rem; color: var(--text-muted); }
+
+/* ── PREMIUM BADGE ── */
+.premium {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(201,168,76,0.15);
+  color: #7a5c1e;
+  border: 1px solid rgba(201,168,76,0.4);
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+
+/* ── POSITIONS ── */
+.positions-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.pos-pill {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 2rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.pos-pill.starter { background: rgba(26,58,42,0.1); color: var(--green-700); border: 1px solid rgba(26,58,42,0.2); }
+.pos-pill.flex { background: rgba(201,168,76,0.12); color: #7a5c1e; border: 1px solid rgba(201,168,76,0.35); }
+.pos-pill.bench { background: rgba(90,112,96,0.1); color: var(--text-muted); border: 1px solid rgba(90,112,96,0.2); }
+.pos-pill.ir { background: rgba(181,64,64,0.08); color: #8a3333; border: 1px solid rgba(181,64,64,0.2); }
+
+/* ── TWO COL ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+/* ── RULE LIST ── */
+.rule-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+.rule-list li {
+  display: flex; gap: 0.75rem; align-items: flex-start;
+  font-size: 0.9rem; line-height: 1.65; color: var(--text-dark);
+}
+.rule-list li::before {
+  content: '';
+  display: block; width: 6px; height: 6px;
+  border-radius: 50%; background: var(--gold-500);
+  flex-shrink: 0; margin-top: 0.55rem;
+}
+
+/* ── CALLOUT ── */
+.callout {
+  background: rgba(26,58,42,0.06);
+  border-left: 3px solid var(--green-700);
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--text-dark);
+  margin-top: 1rem;
+}
+.callout strong { color: var(--green-700); font-weight: 600; }
+
+.callout-gold {
+  background: rgba(201,168,76,0.08);
+  border-left: 3px solid var(--gold-500);
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--text-dark);
+  margin-top: 1rem;
+}
+.callout-gold strong { color: #7a5c1e; font-weight: 600; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--green-900);
+  border-top: 1px solid rgba(201,168,76,0.1);
+  text-align: center;
+  padding: 2.5rem 2rem;
+}
+.footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.1em; color: var(--gold-500); margin-bottom: 0.75rem; }
+.footer-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.footer-link { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
+.footer-link:hover { color: var(--gold-400); }
+.footer-copy { font-size: 0.72rem; color: rgba(255,255,255,0.2); letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a class="navbar-brand" href="index.html">TGC</a>
+  <div class="navbar-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link active" href="rules.html">Rules</a>
+    <a class="nav-link" href="#">Standings</a>
+    <a class="nav-link" href="#">Draft History</a>
+    <a class="nav-link" href="#">Matchups</a>
+    <a class="nav-link" href="#">Analytics</a>
+    <a class="nav-link" href="#">Records</a>
+    <a class="nav-link" href="scoring.html">Scoring</a>
+    <a class="nav-link" href="#">Stats</a>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<header class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-eyebrow">The Grove Championship · Official League Document</div>
+    <h1 class="page-title">Rules & Regulations</h1>
+    <p class="page-sub">Last updated 2025 season &nbsp;·&nbsp; All settings pulled directly from league configuration</p>
+  </div>
+</header>
+
+<!-- JUMP NAV -->
+<div class="jump-nav">
+  <a class="jump-link" href="#league">League</a>
+  <a class="jump-link" href="#draft">Draft</a>
+  <a class="jump-link" href="#roster">Roster</a>
+  <a class="jump-link" href="#trades">Trades & Waivers</a>
+  <a class="jump-link" href="#playoffs">Playoffs</a>
+  <a class="jump-link" href="scoring.html">Scoring ↗</a>
+</div>
+
+<!-- MAIN -->
+<main class="page">
+
+  <!-- 01 LEAGUE -->
+  <section class="section" id="league">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <div>
+        <span class="section-num">Article 01</span>
+        <h2 class="section-title">League Overview</h2>
+      </div>
+    </div>
+    <div class="card-grid">
+      <div class="card"><div class="card-label">League Name</div><div class="card-value highlight">The Grove Championship</div></div>
+      <div class="card"><div class="card-label">Platform</div><div class="card-value">Sleeper</div></div>
+      <div class="card"><div class="card-label">Max Teams</div><div class="card-value highlight">12</div></div>
+      <div class="card"><div class="card-label">Scoring Format</div><div class="card-value highlight">Head-to-Head</div></div>
+      <div class="card"><div class="card-label">Reception Scoring</div><div class="card-value highlight">Full PPR + TE Premium</div></div>
+      <div class="card"><div class="card-label">Median Game</div><div class="card-value highlight">Yes — every week</div></div>
+      <div class="card"><div class="card-label">Scoring Starts</div><div class="card-value">Week 1</div></div>
+      <div class="card"><div class="card-label">Fractional Points</div><div class="card-value">Yes</div></div>
+      <div class="card"><div class="card-label">Negative Points</div><div class="card-value">Yes</div></div>
+      <div class="card"><div class="card-label">Can't Cut List</div><div class="card-value">Sleeper Default</div></div>
+      <div class="card"><div class="card-label">Consolation Bracket</div><div class="card-value">Yes — non-playoff teams</div></div>
+    </div>
+    <div class="callout-gold" style="margin-top:1rem;">
+      <strong>Median Game:</strong> Each week every team plays two games — one against their scheduled opponent and one against the league median score. A team that scores above the median earns an additional win; a team that scores below the median takes an additional loss.
+    </div>
+  </section>
+
+  <!-- 02 DRAFT -->
+  <section class="section" id="draft">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      </div>
+      <div>
+        <span class="section-num">Article 02</span>
+        <h2 class="section-title">Draft Rules</h2>
+      </div>
+    </div>
+    <div class="card-grid" style="margin-bottom:1rem;">
+      <div class="card"><div class="card-label">Draft Type</div><div class="card-value highlight">Offline Snake Draft</div></div>
+      <div class="card"><div class="card-label">Draft Date</div><div class="card-value highlight">August 22, 2026</div></div>
+      <div class="card"><div class="card-label">Draft Order</div><div class="card-value highlight">Randomized</div></div>
+      <div class="card"><div class="card-label">Draft Pick Trades</div><div class="card-value">Not Allowed</div></div>
+      <div class="card"><div class="card-label">Post-Draft Players</div><div class="card-value">Placed on Waivers</div></div>
+    </div>
+    <div class="callout">
+      <strong>Note:</strong> The draft is conducted offline on <strong>August 22, 2026</strong>. Draft order is randomized prior to the draft. The format is a standard snake draft — the order reverses each round.
+    </div>
+  </section>
+
+  <!-- 03 ROSTER -->
+  <section class="section" id="roster">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 3a4 4 0 100 8 4 4 0 000-8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <div>
+        <span class="section-num">Article 03</span>
+        <h2 class="section-title">Roster Construction</h2>
+      </div>
+    </div>
+    <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:1.25rem; line-height:1.6;">Each team fields a 19-slot roster: 10 starters, 7 bench spots, and 2 IR slots.</p>
+    <div class="positions-grid" style="margin-bottom:1.5rem;">
+      <span class="pos-pill starter">QB</span>
+      <span class="pos-pill starter">WR</span>
+      <span class="pos-pill starter">WR</span>
+      <span class="pos-pill starter">RB</span>
+      <span class="pos-pill starter">RB</span>
+      <span class="pos-pill starter">TE</span>
+      <span class="pos-pill flex">W/R/T FLEX</span>
+      <span class="pos-pill flex">W/R/T FLEX</span>
+      <span class="pos-pill starter">K</span>
+      <span class="pos-pill starter">DEF</span>
+      <span class="pos-pill bench">BN</span>
+      <span class="pos-pill bench">BN</span>
+      <span class="pos-pill bench">BN</span>
+      <span class="pos-pill bench">BN</span>
+      <span class="pos-pill bench">BN</span>
+      <span class="pos-pill bench">BN</span>
+      <span class="pos-pill bench">BN</span>
+      <span class="pos-pill ir">IR</span>
+      <span class="pos-pill ir">IR</span>
+    </div>
+    <ul class="rule-list">
+      <li>The two FLEX slots accept WR, RB, or TE — any combination is allowed.</li>
+      <li>IR slots are available for players with an official <strong>Out</strong> or <strong>Doubtful</strong> designation. Players with lesser injury statuses such as Questionable are not eligible for IR.</li>
+      <li>Lineup changes are permitted up until the individual player's game kicks off.</li>
+      <li>Injured players may not be added directly from waivers into an IR slot — they must be rostered normally first, then moved to IR.</li>
+    </ul>
+  </section>
+
+  <!-- 04 TRADES & WAIVERS -->
+  <section class="section" id="trades">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+      </div>
+      <div>
+        <span class="section-num">Article 04</span>
+        <h2 class="section-title">Trades & Waivers</h2>
+      </div>
+    </div>
+    <div class="two-col" style="margin-bottom:1.5rem;">
+      <div>
+        <p class="scoring-group-title">Trades</p>
+        <div class="card-grid">
+          <div class="card"><div class="card-label">Max Trades / Season</div><div class="card-value">No Maximum</div></div>
+          <div class="card"><div class="card-label">Trade Deadline</div><div class="card-value highlight">November 22, 2025</div></div>
+          <div class="card"><div class="card-label">Review Process</div><div class="card-value">Commissioner</div></div>
+          <div class="card"><div class="card-label">Reject Window</div><div class="card-value">1 Day</div></div>
+          <div class="card"><div class="card-label">Draft Pick Trades</div><div class="card-value">Not Allowed</div></div>
+        </div>
+      </div>
+      <div>
+        <p class="scoring-group-title">Waivers & Free Agency</p>
+        <div class="card-grid">
+          <div class="card"><div class="card-label">Waiver Type</div><div class="card-value highlight">Rolling Waivers</div></div>
+          <div class="card"><div class="card-label">Waivers Clear</div><div class="card-value">Wednesday, 3 AM EDT</div></div>
+          <div class="card"><div class="card-label">Time on Waivers After Drop</div><div class="card-value">2 Days</div></div>
+          <div class="card"><div class="card-label">Max Adds / Season</div><div class="card-value">No Maximum</div></div>
+          <div class="card"><div class="card-label">Max Adds / Week</div><div class="card-value">No Maximum</div></div>
+        </div>
+      </div>
+    </div>
+    <ul class="rule-list">
+      <li>All trades are subject to commissioner review. The commissioner may veto any trade deemed collusive or grossly unbalanced.</li>
+      <li>Draft pick trades are <strong>not permitted</strong> in this league.</li>
+      <li>When a player is dropped, they are placed on waivers for <strong>2 days</strong> before becoming a free agent. Any team can put in a waiver claim during that window.</li>
+      <li>Waiver priority is a continual rolling list — the team that makes a successful claim moves to the bottom of the priority order.</li>
+      <li>Waivers process every <strong>Wednesday at 3 AM EDT</strong>. Players are locked upon the start of their week's game.</li>
+    </ul>
+  </section>
+
+  <!-- 05 PLAYOFFS -->
+  <section class="section" id="playoffs">
+    <div class="section-header">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <div>
+        <span class="section-num">Article 05</span>
+        <h2 class="section-title">Playoff Format</h2>
+      </div>
+    </div>
+    <div class="card-grid" style="margin-bottom:1.25rem;">
+      <div class="card"><div class="card-label">Playoff Teams</div><div class="card-value highlight">Top 7 Teams</div></div>
+      <div class="card"><div class="card-label">Playoff Weeks</div><div class="card-value highlight">Weeks 15, 16 & 17</div></div>
+      <div class="card"><div class="card-label">Championship Final</div><div class="card-value">Monday, Dec 29</div></div>
+      <div class="card"><div class="card-label">Consolation Bracket</div><div class="card-value highlight">Yes — Teams 8–12</div></div>
+      <div class="card"><div class="card-label">Reseeding</div><div class="card-value">No</div></div>
+      <div class="card"><div class="card-label">Playoff Tie-Breaker</div><div class="card-value">Best Record vs. Opponent</div></div>
+      <div class="card"><div class="card-label">Lock Eliminated Teams</div><div class="card-value">Yes</div></div>
+    </div>
+    <ul class="rule-list">
+      <li>The top 7 teams by regular-season record qualify for the championship playoff bracket. In the event of a tie, the tiebreaker is best record against the tied opponent(s).</li>
+      <li>Teams ranked 8th through 12th enter a <strong>consolation bracket</strong> running simultaneously during Weeks 15–17.</li>
+      <li>Playoff bracket seeding is set at the start of Week 15 and does not reseed between rounds.</li>
+      <li>Teams eliminated from playoff contention have their rosters locked — they cannot make adds, drops, or trades.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-logo">The Grove Championship</div>
+  <div class="footer-links">
+    <a class="footer-link" href="index.html">Home</a>
+    <a class="footer-link" href="rules.html">Rules</a>
+    <a class="footer-link" href="#">Standings</a>
+    <a class="footer-link" href="#">Draft History</a>
+    <a class="footer-link" href="#">Analytics</a>
+    <a class="footer-link" href="#">Records</a>
+  </div>
+  <p class="footer-copy">The Grove Championship · Est. 2016 · Sleeper</p>
+</footer>
+
+</body>
+</html>

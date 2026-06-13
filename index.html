@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Grove Championship</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green-900: #0b1f14;
+  --green-800: #112a1c;
+  --green-700: #1a3a2a;
+  --green-600: #2d5a3d;
+  --green-500: #3d7a52;
+  --green-400: #5a9e70;
+  --gold-500: #c9a84c;
+  --gold-400: #dbbe72;
+  --gold-300: #ead49a;
+  --gold-200: #f4e9c8;
+  --cream: #faf7f0;
+  --cream-dark: #f0ebe0;
+  --text-dark: #0f1f16;
+  --text-mid: #2d4a38;
+  --text-muted: #5a7060;
+  --text-faint: #8a9e90;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  overflow-x: hidden;
+}
+
+/* ── NAVBAR ── */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  background: rgba(11, 31, 20, 0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  gap: 2rem;
+}
+
+.navbar-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  color: var(--gold-500);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-left: auto;
+}
+.navbar-links::-webkit-scrollbar { display: none; }
+
+.nav-link {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: color 0.2s, background 0.2s;
+}
+
+.nav-link:hover {
+  color: var(--gold-400);
+  background: rgba(201,168,76,0.08);
+}
+
+.nav-link.active {
+  color: var(--gold-500);
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  background: var(--green-900);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 7rem 2rem 5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Field lines — the signature element */
+.field-lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.07;
+}
+
+.field-lines::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 58px,
+      rgba(201,168,76,1) 58px,
+      rgba(201,168,76,1) 60px
+    );
+}
+
+.field-lines::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: rgba(201,168,76,0.5);
+  transform: translateX(-50%);
+}
+
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hero-eyebrow::before,
+.hero-eyebrow::after {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: var(--gold-500);
+  opacity: 0.5;
+}
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 12vw, 9rem);
+  line-height: 0.9;
+  letter-spacing: 0.03em;
+  color: #fff;
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+.hero-title .grove {
+  color: var(--gold-500);
+  display: block;
+}
+
+.hero-title .championship {
+  display: block;
+  font-size: clamp(2rem, 6vw, 4.5rem);
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.12em;
+}
+
+.hero-sub {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.1em;
+  margin-top: 1.5rem;
+  margin-bottom: 3rem;
+  font-weight: 300;
+}
+
+.hero-cta-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.85rem 2rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--gold-500);
+  color: var(--green-900);
+}
+
+.btn-primary:hover {
+  background: var(--gold-400);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn-secondary:hover {
+  border-color: var(--gold-500);
+  color: var(--gold-400);
+}
+
+/* scroll indicator */
+.scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(255,255,255,0.25);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  animation: bounceDown 2s ease-in-out infinite;
+}
+
+.scroll-hint svg {
+  width: 16px;
+  height: 16px;
+  stroke: rgba(255,255,255,0.25);
+  fill: none;
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
+}
+
+/* ── STAT STRIP ── */
+.stat-strip {
+  background: var(--green-700);
+  border-top: 1px solid rgba(201,168,76,0.15);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 0.75rem 2.5rem;
+  border-right: 1px solid rgba(201,168,76,0.15);
+}
+
+.stat-item:last-child { border-right: none; }
+
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.4rem;
+  letter-spacing: 0.05em;
+  color: var(--gold-500);
+  line-height: 1;
+  display: block;
+}
+
+.stat-label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-top: 0.3rem;
+  display: block;
+}
+
+/* ── MAIN CONTENT ── */
+.page-body {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 5rem 2rem;
+}
+
+/* ── SECTION HEADER ── */
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  margin-bottom: 0.6rem;
+}
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: 0.05em;
+  color: var(--text-dark);
+  line-height: 1;
+  margin-bottom: 2rem;
+}
+
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(201,168,76,0.3), transparent);
+  margin-bottom: 2.5rem;
+}
+
+/* ── ABOUT ── */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  margin-bottom: 6rem;
+}
+
+.about-text p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-mid);
+  margin-bottom: 1rem;
+}
+
+.about-text p:last-child { margin-bottom: 0; }
+
+.about-text strong {
+  color: var(--green-600);
+  font-weight: 600;
+}
+
+.about-card {
+  background: var(--green-700);
+  border-radius: 12px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-card::before {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.15);
+}
+
+.about-card::after {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.08);
+}
+
+.about-fact {
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.about-fact:last-child { border-bottom: none; }
+
+.fact-label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: rgba(255,255,255,0.45);
+}
+
+.fact-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--gold-400);
+  font-weight: 500;
+}
+
+/* ── STANDINGS ── */
+.standings-section {
+  margin-bottom: 6rem;
+}
+
+.standings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+}
+
+.standings-season {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  letter-spacing: 0.08em;
+}
+
+.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(201,168,76,0.15);
+}
+
+.standings-table thead {
+  background: var(--green-700);
+}
+
+.standings-table thead th {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  padding: 0.9rem 1.25rem;
+  text-align: left;
+}
+
+.standings-table thead th:not(:first-child):not(:nth-child(2)) {
+  text-align: center;
+}
+
+.standings-table tbody tr {
+  border-bottom: 1px solid rgba(201,168,76,0.07);
+  transition: background 0.15s;
+}
+
+.standings-table tbody tr:last-child { border-bottom: none; }
+.standings-table tbody tr:hover { background: rgba(201,168,76,0.04); }
+
+.standings-table td {
+  padding: 0.9rem 1.25rem;
+  font-size: 0.88rem;
+  background: #fff;
+  color: var(--text-dark);
+}
+
+.standings-table td:not(:first-child):not(:nth-child(2)) {
+  text-align: center;
+  color: var(--text-muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+}
+
+.rank-cell {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  color: var(--text-faint) !important;
+  width: 48px;
+}
+
+.team-name {
+  font-weight: 600;
+  color: var(--text-dark) !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 0.92rem !important;
+}
+
+.playoff-row td { background: rgba(45,90,61,0.04) !important; }
+
+.playoff-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(45,90,61,0.12);
+  color: var(--green-600);
+  border: 1px solid rgba(45,90,61,0.2);
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+.champ-badge {
+  background: rgba(201,168,76,0.15);
+  color: #7a5c1e;
+  border-color: rgba(201,168,76,0.4);
+}
+
+.standings-note {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.standings-note span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.dot-playoff { background: rgba(45,90,61,0.5); }
+.dot-champ { background: var(--gold-500); }
+
+/* ── QUICK LINKS ── */
+.links-section {
+  margin-bottom: 6rem;
+}
+
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.link-card {
+  background: #fff;
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.link-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gold-500);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s;
+}
+
+.link-card:hover {
+  border-color: rgba(201,168,76,0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.link-card:hover::after {
+  transform: scaleX(1);
+}
+
+.link-icon {
+  width: 36px;
+  height: 36px;
+  background: rgba(26,58,42,0.07);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.link-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--green-600);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.link-card-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+}
+
+.link-card-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.link-arrow {
+  margin-top: auto;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.coming-soon {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.coming-pill {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(90,112,96,0.12);
+  color: var(--text-muted);
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  border: 1px solid rgba(90,112,96,0.2);
+}
+
+/* ── SCHEDULE ── */
+.schedule-section {
+  margin-bottom: 6rem;
+}
+
+.schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.5rem;
+}
+
+.week-card {
+  background: #fff;
+  border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  text-align: center;
+}
+
+.week-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.05em;
+  color: var(--text-faint);
+  line-height: 1;
+}
+
+.week-label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 0.4rem;
+}
+
+.week-dates {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: 'DM Mono', monospace;
+}
+
+.week-card.playoff {
+  background: rgba(45,90,61,0.05);
+  border-color: rgba(45,90,61,0.2);
+}
+
+.week-card.playoff .week-num {
+  color: var(--green-600);
+}
+
+.week-card.playoff .week-label {
+  color: var(--green-500);
+}
+
+.week-card.current {
+  background: var(--green-700);
+  border-color: var(--gold-500);
+}
+
+.week-card.current .week-num,
+.week-card.current .week-label,
+.week-card.current .week-dates {
+  color: var(--gold-400);
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--green-900);
+  border-top: 1px solid rgba(201,168,76,0.1);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.1em;
+  color: var(--gold-500);
+  margin-bottom: 0.75rem;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.footer-link {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-link:hover { color: var(--gold-400); }
+
+.footer-copy {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.05em;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 720px) {
+  .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .stat-item { padding: 0.75rem 1.25rem; }
+  .standings-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 3.5rem; }
+  .hero-title .championship { font-size: 1.8rem; }
+  .navbar-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a class="navbar-brand" href="index.html">TGC</a>
+  <div class="navbar-links">
+    <a class="nav-link active" href="index.html">Home</a>
+    <a class="nav-link" href="rules.html">Rules</a>
+    <a class="nav-link" href="#">Standings</a>
+    <a class="nav-link" href="#">Draft History</a>
+    <a class="nav-link" href="#">Matchups</a>
+    <a class="nav-link" href="#">Analytics</a>
+    <a class="nav-link" href="#">Records</a>
+    <a class="nav-link" href="scoring.html">Scoring</a>
+    <a class="nav-link" href="#">Stats</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="field-lines"></div>
+
+  <div class="hero-eyebrow">Est. 2016 &nbsp;·&nbsp; 10 Seasons</div>
+
+  <h1 class="hero-title">
+    <span class="grove">The Grove</span>
+    <span class="championship">Championship</span>
+  </h1>
+
+  <p class="hero-sub">12 Teams &nbsp;·&nbsp; Head-to-Head &nbsp;·&nbsp; Full PPR + TE Premium &nbsp;·&nbsp; Sleeper</p>
+
+  <div class="hero-cta-row">
+    <a class="btn btn-primary" href="#">2025 Standings</a>
+    <a class="btn btn-secondary" href="rules.html">League Rules</a>
+  </div>
+
+  <div class="scroll-hint">
+    <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Scroll
+  </div>
+</section>
+
+<!-- STAT STRIP -->
+<div class="stat-strip">
+  <div class="stat-item">
+    <span class="stat-num">10</span>
+    <span class="stat-label">Seasons Played</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">12</span>
+    <span class="stat-label">Active Managers</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">140</span>
+    <span class="stat-label">Regular Season Games</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">PPR</span>
+    <span class="stat-label">+ TE Premium</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">6</span>
+    <span class="stat-label">Playoff Spots</span>
+  </div>
+</div>
+
+<!-- MAIN BODY -->
+<main class="page-body">
+
+  <!-- ABOUT -->
+  <section id="about" style="margin-bottom: 6rem;">
+    <div class="section-label">About the League</div>
+    <h2 class="section-title">A Decade of Bragging Rights</h2>
+    <div class="section-divider"></div>
+
+    <div class="about-grid">
+      <div class="about-text">
+        <p>The Grove Championship has been running since <strong>2016</strong> — a 10-season journey of bold draft decisions, questionable trades, waiver wire heroics, and heartbreaking playoff exits.</p>
+        <p>What started as a group of friends competing for bragging rights has grown into one of the most competitive fantasy football leagues around. Every September, 12 managers go to war. Only one lifts the trophy in January.</p>
+        <p>Head-to-head weekly matchups, full point-per-reception scoring, and a 6-team playoff format make every roster decision count from Week 1 through the championship.</p>
+      </div>
+
+      <div class="about-card">
+        <div class="about-fact">
+          <span class="fact-label">Platform</span>
+          <span class="fact-value">Sleeper</span>
+        </div>
+        <div class="about-fact">
+          <span class="fact-label">Format</span>
+          <span class="fact-value">Head-to-Head</span>
+        </div>
+        <div class="about-fact">
+          <span class="fact-label">Scoring</span>
+          <span class="fact-value">Full PPR + TE Premium</span>
+        </div>
+        <div class="about-fact">
+          <span class="fact-label">Draft Type</span>
+          <span class="fact-value">Live Snake</span>
+        </div>
+        <div class="about-fact">
+          <span class="fact-label">Roster Size</span>
+          <span class="fact-value">19 Players</span>
+        </div>
+        <div class="about-fact">
+          <span class="fact-label">Trade Deadline</span>
+          <span class="fact-value">Week 11</span>
+        </div>
+        <div class="about-fact">
+          <span class="fact-label">Playoffs</span>
+          <span class="fact-value">Weeks 15–17</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STANDINGS -->
+  <section id="standings" class="standings-section">
+    <div class="standings-header">
+      <div>
+        <div class="section-label">Current Standings</div>
+        <h2 class="section-title">2025 Season</h2>
+      </div>
+      <span class="standings-season">Placeholder — updated each week</span>
+    </div>
+    <div class="section-divider"></div>
+
+    <table class="standings-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Team</th>
+          <th>W</th>
+          <th>L</th>
+          <th>PF</th>
+          <th>PA</th>
+          <th>Streak</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="playoff-row">
+          <td class="rank-cell">1</td>
+          <td class="team-name">Team Name 1 <span class="playoff-badge champ-badge">1st</span></td>
+          <td>10</td><td>4</td><td>1842.4</td><td>1631.2</td><td>W3</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">2</td>
+          <td class="team-name">Team Name 2 <span class="playoff-badge">Playoff</span></td>
+          <td>9</td><td>5</td><td>1798.6</td><td>1702.1</td><td>W1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">3</td>
+          <td class="team-name">Team Name 3 <span class="playoff-badge">Playoff</span></td>
+          <td>8</td><td>6</td><td>1754.2</td><td>1688.4</td><td>L1</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">4</td>
+          <td class="team-name">Team Name 4 <span class="playoff-badge">Playoff</span></td>
+          <td>8</td><td>6</td><td>1721.8</td><td>1699.3</td><td>W2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">5</td>
+          <td class="team-name">Team Name 5 <span class="playoff-badge">Playoff</span></td>
+          <td>7</td><td>7</td><td>1698.5</td><td>1712.6</td><td>L2</td>
+        </tr>
+        <tr class="playoff-row">
+          <td class="rank-cell">6</td>
+          <td class="team-name">Team Name 6 <span class="playoff-badge">Playoff</span></td>
+          <td>7</td><td>7</td><td>1675.3</td><td>1698.7</td><td>W1</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">7</td>
+          <td class="team-name">Team Name 7</td>
+          <td>6</td><td>8</td><td>1654.1</td><td>1721.4</td><td>L1</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">8</td>
+          <td class="team-name">Team Name 8</td>
+          <td>6</td><td>8</td><td>1632.9</td><td>1744.2</td><td>W1</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">9</td>
+          <td class="team-name">Team Name 9</td>
+          <td>5</td><td>9</td><td>1611.7</td><td>1758.3</td><td>L3</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">10</td>
+          <td class="team-name">Team Name 10</td>
+          <td>5</td><td>9</td><td>1598.4</td><td>1776.1</td><td>L1</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">11</td>
+          <td class="team-name">Team Name 11</td>
+          <td>4</td><td>10</td><td>1554.2</td><td>1802.5</td><td>L2</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">12</td>
+          <td class="team-name">Team Name 12</td>
+          <td>3</td><td>11</td><td>1521.8</td><td>1832.4</td><td>L4</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="standings-note">
+      <span><span class="dot dot-playoff"></span> Playoff position (Top 6)</span>
+      <span><span class="dot dot-champ"></span> Current leader</span>
+      <span>All standings are placeholder — replace with real data before publishing</span>
+    </div>
+  </section>
+
+  <!-- QUICK LINKS -->
+  <section id="navigate" class="links-section">
+    <div class="section-label">Explore the Site</div>
+    <h2 class="section-title">Everything You Need</h2>
+    <div class="section-divider"></div>
+
+    <div class="links-grid">
+      <a class="link-card" href="rules.html">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 12h6M9 16h6M9 8h6M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="link-card-title">Rules &amp; Settings</div>
+        <div class="link-card-desc">Full league rules, roster structure, and playoff format.</div>
+        <div class="link-arrow">View Rules →</div>
+      </a>
+
+      <a class="link-card coming-soon" href="#">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3zM3 9h18M9 21V9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="link-card-title">Standings <span class="coming-pill">Coming Soon</span></div>
+        <div class="link-card-desc">Full season standings with points for, points against, and streak tracking.</div>
+        <div class="link-arrow">View Standings →</div>
+      </a>
+
+      <a class="link-card coming-soon" href="#">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="link-card-title">Draft History <span class="coming-pill">Coming Soon</span></div>
+        <div class="link-card-desc">Every pick from every draft across all 10 seasons with ADP vs. actual finish.</div>
+        <div class="link-arrow">View Drafts →</div>
+      </a>
+
+      <a class="link-card" href="scoring.html">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="link-card-title">Scoring Settings</div>
+        <div class="link-card-desc">Full PPR, TE premium, custom kicker & defense scoring breakdown.</div>
+        <div class="link-arrow">View Scoring →</div>
+      </a>
+
+      <a class="link-card coming-soon" href="#">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="link-card-title">Matchups <span class="coming-pill">Coming Soon</span></div>
+        <div class="link-card-desc">Weekly matchup results and scores across all 10 seasons of play.</div>
+        <div class="link-arrow">View Matchups →</div>
+      </a>
+
+      <a class="link-card coming-soon" href="#">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="link-card-title">Records <span class="coming-pill">Coming Soon</span></div>
+        <div class="link-card-desc">All-time champions, highest scores, biggest blowouts, and league records.</div>
+        <div class="link-arrow">View Records →</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- SCHEDULE -->
+  <section id="schedule" class="schedule-section">
+    <div class="section-label">2025 Season Schedule</div>
+    <h2 class="section-title">Regular Season &amp; Playoffs</h2>
+    <div class="section-divider"></div>
+
+    <div class="schedule-grid">
+      <div class="week-card"><div class="week-label">Week</div><div class="week-num">1</div><div class="week-dates">Sep 4–8</div></div>
+      <div class="week-card"><div class="week-label">Week</div><div class="week-num">2</div><div class="week-dates">Sep 11–15</div></div>
+      <div class="week-card"><div class="week-label">Week</div><div class="week-num">3</div><div class="week-dates">Sep 18–22</div></div>
+      <div class="week-card"><div class="week-label">Week</div><div class="week-num">4</div><div class="week-dates">Sep 25–29</div></div>
+      <div class="week-card"><div class="week-label">Week</div><div class="week-num">5</div><div class="week-dates">Oct 2–6</div></div>
+      <div class="week-card"><div class="week-label">Week</div><div class="week-num">6</div><div class="week-dates">Oct 9–13</div></div>
+      <div class="week-card"><div class="week-label">Week</div><div class="week-num">7</div><div class="week-dates">Oct 16–20</div></div>
+      <div class="week-card"><div class="week-label">Week</div><div class="week-num">8</div><div class="week-dates">Oct 23–27</div></div>
+      <div class="week-card"><div class="week-label">Week</div><div class="week-num">9</div><div class="week-dates">Oct 30–Nov 3</div></div>
+      <div class="week-card"><div class="week-label">Week</div><div class="week-num">10</div><div class="week-dates">Nov 6–10</div></div>
+      <div class="week-card"><div class="week-label">Week</div><div class="week-num">11</div><div class="week-dates">Nov 13–17</div></div>
+      <div class="week-card"><div class="week-label">Week</div><div class="week-num">12</div><div class="week-dates">Nov 20–24</div></div>
+      <div class="week-card"><div class="week-label">Week</div><div class="week-num">13</div><div class="week-dates">Nov 27–Dec 1</div></div>
+      <div class="week-card"><div class="week-label">Week</div><div class="week-num">14</div><div class="week-dates">Dec 4–8</div></div>
+      <div class="week-card playoff"><div class="week-label">Playoffs</div><div class="week-num">15</div><div class="week-dates">Dec 11–15</div></div>
+      <div class="week-card playoff"><div class="week-label">Playoffs</div><div class="week-num">16</div><div class="week-dates">Dec 18–22</div></div>
+      <div class="week-card playoff"><div class="week-label">Championship</div><div class="week-num">17</div><div class="week-dates">Dec 25–29</div></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">The Grove Championship</div>
+  <div class="footer-links">
+    <a class="footer-link" href="index.html">Home</a>
+    <a class="footer-link" href="rules.html">Rules</a>
+    <a class="footer-link" href="#">Standings</a>
+    <a class="footer-link" href="#">Draft History</a>
+    <a class="footer-link" href="#">Analytics</a>
+    <a class="footer-link" href="#">Records</a>
+  </div>
+  <p class="footer-copy">The Grove Championship &nbsp;·&nbsp; Est. 2016 &nbsp;·&nbsp; Sleeper</p>
+</footer>
+
+</body>
+</html>
