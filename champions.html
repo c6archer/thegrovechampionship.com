@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Champion History | The Grove Championship</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --green-900:#0b1f14;--green-800:#112a1c;--green-700:#1a3a2a;--green-600:#2d5a3d;--green-500:#3d7a52;
+  --gold-500:#c9a84c;--gold-400:#dbbe72;--gold-300:#ead49a;--cream:#faf7f0;
+  --text-dark:#0f1f16;--text-muted:#5a7060;--text-faint:#8a9e90;
+  --border:rgba(201,168,76,0.18);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-dark);}
+
+/* NAVBAR */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(11,31,20,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.15);height:60px;display:flex;align-items:center;padding:0 2rem;gap:2rem;}
+.navbar-brand{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.08em;color:var(--gold-500);text-decoration:none;flex-shrink:0;}
+.navbar-links{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;margin-left:auto;}
+.navbar-links::-webkit-scrollbar{display:none;}
+.nav-link{font-size:0.75rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.5);text-decoration:none;padding:0.5rem 0.9rem;border-radius:4px;white-space:nowrap;transition:color 0.2s,background 0.2s;}
+.nav-link:hover{color:var(--gold-400);background:rgba(201,168,76,0.08);}
+.nav-link.active{color:var(--gold-500);}
+
+/* HERO */
+.page-hero{background:var(--green-900);padding:7rem 2rem 4rem;position:relative;overflow:hidden;text-align:center;}
+.page-hero::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 58px,rgba(201,168,76,0.05) 58px,rgba(201,168,76,0.05) 60px);pointer-events:none;}
+.hero-trophy{font-size:4rem;display:block;margin-bottom:1rem;position:relative;}
+.page-eyebrow{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold-500);margin-bottom:0.75rem;position:relative;}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,7vw,5.5rem);letter-spacing:0.05em;color:#fff;line-height:1;margin-bottom:0.75rem;position:relative;}
+.page-sub{font-size:0.85rem;color:rgba(255,255,255,0.35);letter-spacing:0.08em;font-weight:300;position:relative;}
+
+/* JUMP NAV */
+.jump-nav{background:var(--green-700);border-bottom:1px solid rgba(201,168,76,0.15);padding:0 2rem;display:flex;overflow-x:auto;scrollbar-width:none;}
+.jump-nav::-webkit-scrollbar{display:none;}
+.jump-link{font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.45);text-decoration:none;padding:0.9rem 1rem;white-space:nowrap;border-bottom:2px solid transparent;transition:color 0.2s,border-color 0.2s;}
+.jump-link:hover{color:var(--gold-400);border-bottom-color:var(--gold-500);}
+
+/* PAGE */
+.page{max-width:1100px;margin:0 auto;padding:4rem 2rem 6rem;}
+
+/* SECTION */
+.section{margin-bottom:5rem;scroll-margin-top:110px;}
+.section-eyebrow{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-500);margin-bottom:0.5rem;}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:0.05em;color:var(--green-700);margin-bottom:1.5rem;}
+.section-divider{height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.3),transparent);margin-bottom:2rem;}
+
+/* CHAMPION CARDS — one per season */
+.champ-cards{display:flex;flex-direction:column;gap:1.25rem;}
+
+.champ-card{border-radius:14px;overflow:hidden;border:1px solid var(--border);display:grid;grid-template-columns:140px 1fr;}
+@media(max-width:600px){.champ-card{grid-template-columns:1fr;}}
+
+.champ-year-panel{background:var(--green-700);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;position:relative;overflow:hidden;}
+.champ-year-panel::before{content:'🏆';position:absolute;font-size:5rem;opacity:0.07;top:50%;left:50%;transform:translate(-50%,-50%);}
+.champ-year{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:0.05em;color:var(--gold-500);line-height:1;position:relative;}
+.champ-season-label{font-size:0.62rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:0.3rem;position:relative;}
+
+.champ-details{background:#fff;padding:1.5rem;}
+.champ-winner-row{display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);}
+.champ-crown{font-size:1.8rem;}
+.champ-winner-info{flex:1;}
+.champ-winner-name{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.05em;color:var(--green-700);line-height:1;}
+.champ-winner-team{font-size:0.78rem;color:var(--text-muted);margin-top:0.15rem;}
+.champ-winner-badge{font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:rgba(201,168,76,0.15);color:#7a5c1e;border:1px solid rgba(201,168,76,0.4);padding:0.25rem 0.6rem;border-radius:3px;white-space:nowrap;}
+
+.champ-podium{display:flex;gap:1rem;flex-wrap:wrap;}
+.podium-entry{display:flex;align-items:center;gap:0.5rem;}
+.podium-medal{font-size:1.1rem;}
+.podium-info{}
+.podium-name{font-weight:600;font-size:0.88rem;color:var(--text-dark);}
+.podium-label{font-size:0.65rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);}
+.podium-team{font-size:0.72rem;color:var(--text-muted);}
+
+.champ-record{margin-left:auto;text-align:right;flex-shrink:0;}
+.champ-record-val{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.03em;color:var(--green-700);}
+.champ-record-lbl{font-size:0.62rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);}
+
+/* LEADERBOARD TABLE */
+.leaderboard-table{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
+.leaderboard-table thead{background:var(--green-700);}
+.leaderboard-table thead th{font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);padding:0.85rem 1rem;text-align:left;}
+.leaderboard-table thead th:not(:first-child):not(:nth-child(2)){text-align:center;}
+.leaderboard-table tbody tr{border-bottom:1px solid rgba(201,168,76,0.08);transition:background 0.15s;}
+.leaderboard-table tbody tr:last-child{border-bottom:none;}
+.leaderboard-table tbody tr:hover{background:rgba(201,168,76,0.04);}
+.leaderboard-table td{padding:0.85rem 1rem;font-size:0.88rem;background:#fff;color:var(--text-dark);}
+.leaderboard-table td:not(:first-child):not(:nth-child(2)){text-align:center;font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--text-muted);}
+.rank-num{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--text-faint);}
+.mgr-cell{font-weight:600;}
+.trophy-cell{font-size:1rem;}
+.repeat-badge{display:inline-block;font-size:0.58rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:rgba(201,168,76,0.15);color:#7a5c1e;border:1px solid rgba(201,168,76,0.35);padding:0.15rem 0.45rem;border-radius:3px;margin-left:0.4rem;vertical-align:middle;}
+
+/* RECORDS GRID */
+.records-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;}
+.record-card{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.record-card-header{background:var(--green-700);padding:0.75rem 1.1rem;}
+.record-card-title{font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.5);}
+.record-entries{padding:0;}
+.record-entry{display:flex;align-items:center;padding:0.75rem 1.1rem;border-bottom:1px solid rgba(201,168,76,0.08);}
+.record-entry:last-child{border-bottom:none;}
+.record-pos{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--text-faint);width:28px;flex-shrink:0;}
+.record-entry-info{flex:1;}
+.record-name{font-weight:600;font-size:0.88rem;color:var(--text-dark);}
+.record-detail{font-size:0.72rem;color:var(--text-muted);margin-top:0.1rem;}
+.record-val{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.03em;color:var(--green-700);}
+
+/* SEASON SUMMARY TABLE */
+.season-table{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
+.season-table thead{background:var(--green-700);}
+.season-table thead th{font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);padding:0.75rem 1rem;text-align:center;}
+.season-table thead th:first-child{text-align:left;}
+.season-table tbody tr{border-bottom:1px solid rgba(201,168,76,0.08);}
+.season-table tbody tr:last-child{border-bottom:none;}
+.season-table tbody tr:hover{background:rgba(201,168,76,0.04);}
+.season-table td{padding:0.75rem 1rem;font-size:0.85rem;background:#fff;color:var(--text-muted);text-align:center;font-family:'DM Mono',monospace;}
+.season-table td:first-child{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--green-700);text-align:left;}
+.season-table td.champ-td{font-weight:600;color:var(--text-dark);font-family:'DM Sans',sans-serif;}
+
+/* FOOTER */
+footer{background:var(--green-900);border-top:1px solid rgba(201,168,76,0.1);text-align:center;padding:2.5rem 2rem;}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.1em;color:var(--gold-500);margin-bottom:0.75rem;}
+.footer-links{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-bottom:1rem;}
+.footer-link{font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s;}
+.footer-link:hover{color:var(--gold-400);}
+.footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.2);letter-spacing:0.05em;}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a class="navbar-brand" href="index.html">TGC</a>
+  <div class="navbar-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="rules.html">Rules</a>
+    <a class="nav-link" href="standings.html">Standings</a>
+    <a class="nav-link" href="draft.html">Draft History</a>
+    <a class="nav-link" href="managers.html">Managers</a>
+    <a class="nav-link active" href="champions.html">Champions</a>
+    <a class="nav-link" href="#">Matchups</a>
+    <a class="nav-link" href="#">Analytics</a>
+    <a class="nav-link" href="scoring.html">Scoring</a>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <span class="hero-trophy">🏆</span>
+  <div class="page-eyebrow">The Grove Championship · 2016–2025</div>
+  <h1 class="page-title">Champion History</h1>
+  <p class="page-sub">10 seasons · 10 champions · Every winner, runner-up, and podium finish</p>
+</header>
+
+<div class="jump-nav">
+  <a class="jump-link" href="#seasons">Season by Season</a>
+  <a class="jump-link" href="#leaderboard">All-Time Leaderboard</a>
+</div>
+
+<main class="page">
+
+  <!-- SEASON BY SEASON -->
+  <section class="section" id="seasons">
+    <div class="section-eyebrow">Year by Year</div>
+    <h2 class="section-title">Season Champions</h2>
+    <div class="section-divider"></div>
+    <div class="champ-cards">
+
+      <!-- 2025 -->
+      <div class="champ-card">
+        <div class="champ-year-panel">
+          <div class="champ-year">2025</div>
+          <div class="champ-season-label">Season 10</div>
+        </div>
+        <div class="champ-details">
+          <div class="champ-winner-row">
+            <div class="champ-crown">🏆</div>
+            <div class="champ-winner-info">
+              <div class="champ-winner-name">Nicky</div>
+              <div class="champ-winner-team">Nicky's Off-Season</div>
+            </div>
+            <div class="champ-record"><div class="champ-record-val">9–5</div><div class="champ-record-lbl">Regular Season</div></div>
+            <div class="champ-winner-badge">Champion</div>
+          </div>
+          <div class="champ-podium">
+            <div class="podium-entry"><div class="podium-medal">🥈</div><div class="podium-info"><div class="podium-name">Al</div><div class="podium-team">Al's Brandon Bruiser</div><div class="podium-label">Runner-Up</div></div></div>
+            <div class="podium-entry"><div class="podium-medal">🥉</div><div class="podium-info"><div class="podium-name">Larry</div><div class="podium-team">The Vagitarians</div><div class="podium-label">3rd Place</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2024 -->
+      <div class="champ-card">
+        <div class="champ-year-panel">
+          <div class="champ-year">2024</div>
+          <div class="champ-season-label">Season 9</div>
+        </div>
+        <div class="champ-details">
+          <div class="champ-winner-row">
+            <div class="champ-crown">🏆</div>
+            <div class="champ-winner-info">
+              <div class="champ-winner-name">Dominic</div>
+              <div class="champ-winner-team">Team Suck Me</div>
+            </div>
+            <div class="champ-record"><div class="champ-record-val">9–5</div><div class="champ-record-lbl">Regular Season</div></div>
+            <div class="champ-winner-badge">Champion</div>
+          </div>
+          <div class="champ-podium">
+            <div class="podium-entry"><div class="podium-medal">🥈</div><div class="podium-info"><div class="podium-name">Devere</div><div class="podium-team">Devere's Remarkable Team</div><div class="podium-label">Runner-Up</div></div></div>
+            <div class="podium-entry"><div class="podium-medal">🥉</div><div class="podium-info"><div class="podium-name">Cory Harman</div><div class="podium-team">Cory Harman's Nice Team</div><div class="podium-label">3rd Place</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2023 -->
+      <div class="champ-card">
+        <div class="champ-year-panel">
+          <div class="champ-year">2023</div>
+          <div class="champ-season-label">Season 8</div>
+        </div>
+        <div class="champ-details">
+          <div class="champ-winner-row">
+            <div class="champ-crown">🏆</div>
+            <div class="champ-winner-info">
+              <div class="champ-winner-name">Dee</div>
+              <div class="champ-winner-team">Big Daddy</div>
+            </div>
+            <div class="champ-record"><div class="champ-record-val">7–6</div><div class="champ-record-lbl">Regular Season</div></div>
+            <div class="champ-winner-badge">Champion</div>
+          </div>
+          <div class="champ-podium">
+            <div class="podium-entry"><div class="podium-medal">🥈</div><div class="podium-info"><div class="podium-name">Tom</div><div class="podium-team">Tommy Noles</div><div class="podium-label">Runner-Up</div></div></div>
+            <div class="podium-entry"><div class="podium-medal">🥉</div><div class="podium-info"><div class="podium-name">Antonio</div><div class="podium-team">Antonio</div><div class="podium-label">3rd Place</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2022 -->
+      <div class="champ-card">
+        <div class="champ-year-panel">
+          <div class="champ-year">2022</div>
+          <div class="champ-season-label">Season 7</div>
+        </div>
+        <div class="champ-details">
+          <div class="champ-winner-row">
+            <div class="champ-crown">🏆</div>
+            <div class="champ-winner-info">
+              <div class="champ-winner-name">Al</div>
+              <div class="champ-winner-team">Al's Brandon Bruiser</div>
+            </div>
+            <div class="champ-record"><div class="champ-record-val">4–9</div><div class="champ-record-lbl">Regular Season</div></div>
+            <div class="champ-winner-badge">Champion</div>
+          </div>
+          <div class="champ-podium">
+            <div class="podium-entry"><div class="podium-medal">🥈</div><div class="podium-info"><div class="podium-name">Dominic</div><div class="podium-team">TAKE MY MONEY</div><div class="podium-label">Runner-Up</div></div></div>
+            <div class="podium-entry"><div class="podium-medal">🥉</div><div class="podium-info"><div class="podium-name">Tom</div><div class="podium-team">Tommy Noles</div><div class="podium-label">3rd Place</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2021 -->
+      <div class="champ-card">
+        <div class="champ-year-panel">
+          <div class="champ-year">2021</div>
+          <div class="champ-season-label">Season 6</div>
+        </div>
+        <div class="champ-details">
+          <div class="champ-winner-row">
+            <div class="champ-crown">🏆</div>
+            <div class="champ-winner-info">
+              <div class="champ-winner-name">Dee</div>
+              <div class="champ-winner-team">Big Daddy</div>
+            </div>
+            <div class="champ-record"><div class="champ-record-val">8–5</div><div class="champ-record-lbl">Regular Season</div></div>
+            <div class="champ-winner-badge">Champion</div>
+          </div>
+          <div class="champ-podium">
+            <div class="podium-entry"><div class="podium-medal">🥈</div><div class="podium-info"><div class="podium-name">Antonio</div><div class="podium-team">Antonio</div><div class="podium-label">Runner-Up</div></div></div>
+            <div class="podium-entry"><div class="podium-medal">🥉</div><div class="podium-info"><div class="podium-name">Nicky</div><div class="podium-team">ngar's shitty team</div><div class="podium-label">3rd Place</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2020 -->
+      <div class="champ-card">
+        <div class="champ-year-panel">
+          <div class="champ-year">2020</div>
+          <div class="champ-season-label">Season 5</div>
+        </div>
+        <div class="champ-details">
+          <div class="champ-winner-row">
+            <div class="champ-crown">🏆</div>
+            <div class="champ-winner-info">
+              <div class="champ-winner-name">Antonio</div>
+              <div class="champ-winner-team">Antonio</div>
+            </div>
+            <div class="champ-record"><div class="champ-record-val">9–4</div><div class="champ-record-lbl">Regular Season</div></div>
+            <div class="champ-winner-badge">Champion</div>
+          </div>
+          <div class="champ-podium">
+            <div class="podium-entry"><div class="podium-medal">🥈</div><div class="podium-info"><div class="podium-name">Collin</div><div class="podium-team">Captain Col</div><div class="podium-label">Runner-Up</div></div></div>
+            <div class="podium-entry"><div class="podium-medal">🥉</div><div class="podium-info"><div class="podium-name">Dylan</div><div class="podium-team">Big D</div><div class="podium-label">3rd Place</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2019 -->
+      <div class="champ-card">
+        <div class="champ-year-panel">
+          <div class="champ-year">2019</div>
+          <div class="champ-season-label">Season 4</div>
+        </div>
+        <div class="champ-details">
+          <div class="champ-winner-row">
+            <div class="champ-crown">🏆</div>
+            <div class="champ-winner-info">
+              <div class="champ-winner-name">Tom</div>
+              <div class="champ-winner-team">Tommy Noles</div>
+            </div>
+            <div class="champ-record"><div class="champ-record-val">6–7</div><div class="champ-record-lbl">Regular Season</div></div>
+            <div class="champ-winner-badge">Champion</div>
+          </div>
+          <div class="champ-podium">
+            <div class="podium-entry"><div class="podium-medal">🥈</div><div class="podium-info"><div class="podium-name">Giovanny</div><div class="podium-team">giovanny's Team</div><div class="podium-label">Runner-Up</div></div></div>
+            <div class="podium-entry"><div class="podium-medal">🥉</div><div class="podium-info"><div class="podium-name">Devere</div><div class="podium-team">Devere's Team</div><div class="podium-label">3rd Place</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2018 -->
+      <div class="champ-card">
+        <div class="champ-year-panel">
+          <div class="champ-year">2018</div>
+          <div class="champ-season-label">Season 3</div>
+        </div>
+        <div class="champ-details">
+          <div class="champ-winner-row">
+            <div class="champ-crown">🏆</div>
+            <div class="champ-winner-info">
+              <div class="champ-winner-name">Giovanny</div>
+              <div class="champ-winner-team">giovanny's Team</div>
+            </div>
+            <div class="champ-record"><div class="champ-record-val">9–6</div><div class="champ-record-lbl">Regular Season</div></div>
+            <div class="champ-winner-badge">Champion</div>
+          </div>
+          <div class="champ-podium">
+            <div class="podium-entry"><div class="podium-medal">🥈</div><div class="podium-info"><div class="podium-name">Larry</div><div class="podium-team">Larry's Team</div><div class="podium-label">Runner-Up</div></div></div>
+            <div class="podium-entry"><div class="podium-medal">🥉</div><div class="podium-info"><div class="podium-name">Tom</div><div class="podium-team">Tom's Fabulous Team</div><div class="podium-label">3rd Place</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2017 -->
+      <div class="champ-card">
+        <div class="champ-year-panel">
+          <div class="champ-year">2017</div>
+          <div class="champ-season-label">Season 2</div>
+        </div>
+        <div class="champ-details">
+          <div class="champ-winner-row">
+            <div class="champ-crown">🏆</div>
+            <div class="champ-winner-info">
+              <div class="champ-winner-name">Larry <span class="repeat-badge">Back-to-Back</span></div>
+              <div class="champ-winner-team">Larry's Team</div>
+            </div>
+            <div class="champ-record"><div class="champ-record-val">12–3</div><div class="champ-record-lbl">Regular Season</div></div>
+            <div class="champ-winner-badge">Champion</div>
+          </div>
+          <div class="champ-podium">
+            <div class="podium-entry"><div class="podium-medal">🥈</div><div class="podium-info"><div class="podium-name">Dylan</div><div class="podium-team">Dylan is #1</div><div class="podium-label">Runner-Up</div></div></div>
+            <div class="podium-entry"><div class="podium-medal">🥉</div><div class="podium-info"><div class="podium-name">Collin</div><div class="podium-team">Seminoles Suck</div><div class="podium-label">3rd Place</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2016 -->
+      <div class="champ-card">
+        <div class="champ-year-panel">
+          <div class="champ-year">2016</div>
+          <div class="champ-season-label">Season 1</div>
+        </div>
+        <div class="champ-details">
+          <div class="champ-winner-row">
+            <div class="champ-crown">🏆</div>
+            <div class="champ-winner-info">
+              <div class="champ-winner-name">Larry</div>
+              <div class="champ-winner-team">Larry's Team</div>
+            </div>
+            <div class="champ-record"><div class="champ-record-val">11–4</div><div class="champ-record-lbl">Regular Season</div></div>
+            <div class="champ-winner-badge">Inaugural Champion</div>
+          </div>
+          <div class="champ-podium">
+            <div class="podium-entry"><div class="podium-medal">🥈</div><div class="podium-info"><div class="podium-name">Tom</div><div class="podium-team">Tom's Wondrous Team</div><div class="podium-label">Runner-Up</div></div></div>
+            <div class="podium-entry"><div class="podium-medal">🥉</div><div class="podium-info"><div class="podium-name">Dylan</div><div class="podium-team">Dylan is #1</div><div class="podium-label">3rd Place</div></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ALL-TIME LEADERBOARD -->
+  <section class="section" id="leaderboard">
+    <div class="section-eyebrow">All-Time Podium Finishes</div>
+    <h2 class="section-title">Championship Leaderboard</h2>
+    <div class="section-divider"></div>
+    <table class="leaderboard-table">
+      <thead>
+        <tr><th>#</th><th>Manager</th><th>🏆 Titles</th><th>🥈 Runner-Ups</th><th>🥉 3rd Place</th><th>Total Podiums</th><th>Seasons</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="rank-num">1</td><td class="mgr-cell">Larry</td><td class="trophy-cell">🏆🏆</td><td>1</td><td>0</td><td>3</td><td>10</td></tr>
+        <tr><td class="rank-num">2</td><td class="mgr-cell">Dee</td><td class="trophy-cell">🏆🏆</td><td>0</td><td>1</td><td>3</td><td>5</td></tr>
+        <tr><td class="rank-num">3</td><td class="mgr-cell">Tom</td><td class="trophy-cell">🏆</td><td>2</td><td>1</td><td>4</td><td>10</td></tr>
+        <tr><td class="rank-num">4</td><td class="mgr-cell">Antonio</td><td class="trophy-cell">🏆</td><td>1</td><td>1</td><td>3</td><td>7</td></tr>
+        <tr><td class="rank-num">5</td><td class="mgr-cell">Al</td><td class="trophy-cell">🏆</td><td>1</td><td>0</td><td>2</td><td>10</td></tr>
+        <tr><td class="rank-num">6</td><td class="mgr-cell">Dominic</td><td class="trophy-cell">🏆</td><td>1</td><td>0</td><td>2</td><td>8</td></tr>
+        <tr><td class="rank-num">7</td><td class="mgr-cell">Nicky</td><td class="trophy-cell">🏆</td><td>0</td><td>1</td><td>2</td><td>10</td></tr>
+        <tr><td class="rank-num">8</td><td class="mgr-cell">Giovanny</td><td class="trophy-cell">🏆</td><td>1</td><td>0</td><td>2</td><td>2</td></tr>
+        <tr><td class="rank-num">9</td><td class="mgr-cell">Collin</td><td class="trophy-cell">—</td><td>1</td><td>2</td><td>3</td><td>10</td></tr>
+        <tr><td class="rank-num">10</td><td class="mgr-cell">Dylan</td><td class="trophy-cell">—</td><td>1</td><td>2</td><td>3</td><td>5</td></tr>
+        <tr><td class="rank-num">11</td><td class="mgr-cell">Devere</td><td class="trophy-cell">—</td><td>1</td><td>1</td><td>2</td><td>7</td></tr>
+        <tr><td class="rank-num">12</td><td class="mgr-cell">Cory Harman</td><td class="trophy-cell">—</td><td>0</td><td>1</td><td>1</td><td>2</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-logo">The Grove Championship</div>
+  <div class="footer-links">
+    <a class="footer-link" href="index.html">Home</a>
+    <a class="footer-link" href="rules.html">Rules</a>
+    <a class="footer-link" href="standings.html">Standings</a>
+    <a class="footer-link" href="draft.html">Draft History</a>
+    <a class="footer-link" href="managers.html">Managers</a>
+    <a class="footer-link" href="champions.html">Champions</a>
+    <a class="footer-link" href="scoring.html">Scoring</a>
+  </div>
+  <p class="footer-copy">The Grove Championship · Est. 2016 · Sleeper Fantasy Football</p>
+</footer>
+
+</body>
+</html>

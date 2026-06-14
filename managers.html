@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>All-Time Manager Stats | The Grove Championship</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --green-900:#0b1f14;--green-700:#1a3a2a;--green-600:#2d5a3d;--green-500:#3d7a52;
+  --gold-500:#c9a84c;--gold-400:#dbbe72;--cream:#faf7f0;
+  --text-dark:#0f1f16;--text-muted:#5a7060;--text-faint:#8a9e90;
+  --border:rgba(201,168,76,0.18);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-dark);}
+/* NAVBAR */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(11,31,20,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.15);height:60px;display:flex;align-items:center;padding:0 2rem;gap:2rem;}
+.navbar-brand{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.08em;color:var(--gold-500);text-decoration:none;flex-shrink:0;}
+.navbar-links{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;margin-left:auto;}
+.navbar-links::-webkit-scrollbar{display:none;}
+.nav-link{font-size:0.75rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.5);text-decoration:none;padding:0.5rem 0.9rem;border-radius:4px;white-space:nowrap;transition:color 0.2s,background 0.2s;}
+.nav-link:hover{color:var(--gold-400);background:rgba(201,168,76,0.08);}
+.nav-link.active{color:var(--gold-500);}
+/* HERO */
+.page-hero{background:var(--green-900);padding:7rem 2rem 3.5rem;position:relative;overflow:hidden;}
+.page-hero::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 58px,rgba(201,168,76,0.05) 58px,rgba(201,168,76,0.05) 60px);pointer-events:none;}
+.page-hero-inner{max-width:1100px;margin:0 auto;position:relative;}
+.page-eyebrow{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold-500);margin-bottom:0.75rem;}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4.5rem);letter-spacing:0.05em;color:#fff;line-height:1;margin-bottom:0.75rem;}
+.page-sub{font-size:0.85rem;color:rgba(255,255,255,0.35);letter-spacing:0.08em;font-weight:300;}
+/* JUMP NAV */
+.jump-nav{background:var(--green-700);border-bottom:1px solid rgba(201,168,76,0.15);padding:0 2rem;display:flex;overflow-x:auto;scrollbar-width:none;}
+.jump-nav::-webkit-scrollbar{display:none;}
+.jump-link{font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.45);text-decoration:none;padding:0.9rem 1rem;white-space:nowrap;border-bottom:2px solid transparent;transition:color 0.2s,border-color 0.2s;}
+.jump-link:hover{color:var(--gold-400);border-bottom-color:var(--gold-500);}
+/* SORT BAR */
+.sort-bar{background:#fff;border-bottom:1px solid var(--border);padding:0.65rem 2rem;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;}
+.sort-label{font-size:0.68rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-right:0.25rem;}
+.sort-btn{font-size:0.72rem;font-weight:500;color:var(--text-muted);background:transparent;border:1px solid var(--border);border-radius:4px;padding:0.3rem 0.7rem;cursor:pointer;transition:all 0.2s;}
+.sort-btn:hover{color:var(--green-700);border-color:var(--green-600);}
+.sort-btn.active{background:var(--green-700);color:var(--gold-400);border-color:var(--green-700);}
+/* PAGE */
+.page{max-width:1100px;margin:0 auto;padding:3rem 2rem 6rem;}
+/* SUMMARY STRIP */
+.summary-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:3rem;}
+.summary-item{background:#fff;padding:1.25rem 1.5rem;}
+.summary-num{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.05em;color:var(--green-700);line-height:1;display:block;}
+.summary-lbl{font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-top:0.3rem;}
+/* SECTION HEADER */
+.section-eyebrow{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-500);margin-bottom:0.5rem;}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.05em;color:var(--green-700);margin-bottom:1.5rem;}
+.section-divider{height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.3),transparent);margin-bottom:2rem;}
+/* MANAGER CARDS */
+.cards-grid{display:flex;flex-direction:column;gap:1rem;}
+.mgr-card{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:box-shadow 0.2s;}
+.mgr-card:hover{box-shadow:0 4px 20px rgba(0,0,0,0.07);}
+.mgr-card-header{background:var(--green-700);padding:1.1rem 1.5rem;display:flex;align-items:center;gap:1rem;}
+.mgr-rank{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:rgba(255,255,255,0.2);letter-spacing:0.05em;flex-shrink:0;width:48px;}
+.mgr-info{flex:1;min-width:0;}
+.mgr-name-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.mgr-name{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.06em;color:#fff;}
+.mgr-trophies{display:flex;gap:0.4rem;flex-wrap:wrap;}
+.trophy{font-size:0.78rem;padding:0.2rem 0.5rem;border-radius:3px;font-weight:600;}
+.trophy.gold{background:rgba(201,168,76,0.2);color:var(--gold-300);border:1px solid rgba(201,168,76,0.35);}
+.trophy.silver{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.2);}
+.trophy.none{color:rgba(255,255,255,0.2);font-size:0.8rem;}
+.mgr-teams{font-size:0.72rem;color:rgba(255,255,255,0.35);margin-top:0.25rem;line-height:1.5;}
+.team-alias{display:inline;}
+.mgr-seasons{text-align:center;flex-shrink:0;}
+.mgr-seasons{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--gold-500);line-height:1;}
+.mgr-seasons span{display:block;font-family:'DM Sans',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);}
+.mgr-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);}
+@media(max-width:640px){.mgr-stats-grid{grid-template-columns:repeat(2,1fr);}}
+.stat-box{padding:1rem 1.25rem;background:#fff;}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.03em;color:var(--green-700);line-height:1;margin-bottom:0.3rem;}
+.stat-val.positive{color:#2d7a4a;}
+.stat-val.negative{color:#b54040;}
+.stat-lbl{font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.5rem;}
+.stat-sub{font-size:0.72rem;color:var(--text-faint);margin-top:0.35rem;}
+.pct-bar-bg{background:rgba(0,0,0,0.06);border-radius:2px;height:4px;overflow:hidden;}
+.pct-bar-fill{height:100%;border-radius:2px;transition:width 0.6s ease;}
+.finish-badge{font-size:1.1rem;}
+.finish-badge.champ-finish{font-size:1.3rem;}
+/* CHAMPIONSHIP TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.timeline-row{display:grid;grid-template-columns:80px 1fr;border-bottom:1px solid var(--border);}
+.timeline-row:last-child{border-bottom:none;}
+.timeline-year{background:var(--green-700);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.08em;color:var(--gold-500);}
+.timeline-entries{display:flex;background:#fff;}
+.timeline-entry{flex:1;padding:0.85rem 1rem;display:flex;align-items:center;gap:0.5rem;border-right:1px solid var(--border);}
+.timeline-entry:last-child{border-right:none;}
+.timeline-entry.gold{background:rgba(201,168,76,0.04);}
+.tl-medal{font-size:1rem;flex-shrink:0;}
+.tl-name{font-weight:600;font-size:0.88rem;color:var(--text-dark);}
+.tl-label{font-size:0.65rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-left:auto;}
+@media(max-width:600px){.tl-label{display:none;}}
+/* FOOTER */
+footer{background:var(--green-900);border-top:1px solid rgba(201,168,76,0.1);text-align:center;padding:2.5rem 2rem;}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.1em;color:var(--gold-500);margin-bottom:0.75rem;}
+.footer-links{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-bottom:1rem;}
+.footer-link{font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s;}
+.footer-link:hover{color:var(--gold-400);}
+.footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.2);letter-spacing:0.05em;}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a class="navbar-brand" href="index.html">TGC</a>
+  <div class="navbar-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="rules.html">Rules</a>
+    <a class="nav-link" href="standings.html">Standings</a>
+    <a class="nav-link" href="draft.html">Draft History</a>
+    <a class="nav-link active" href="managers.html">Managers</a>
+    <a class="nav-link" href="#">Matchups</a>
+    <a class="nav-link" href="#">Analytics</a>
+    <a class="nav-link" href="#">Records</a>
+    <a class="nav-link" href="scoring.html">Scoring</a>
+  </div>
+</nav>
+<header class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-eyebrow">The Grove Championship · 2016–2025</div>
+    <h1 class="page-title">All-Time Manager Stats</h1>
+    <p class="page-sub">19 managers · 10 seasons · Career records, scoring, championships</p>
+  </div>
+</header>
+<div class="jump-nav">
+  <a class="jump-link" href="#managers">Manager Cards</a>
+  <a class="jump-link" href="#timeline">Championship Timeline</a>
+</div>
+<div class="sort-bar">
+  <span class="sort-label">Sort by:</span>
+  <button class="sort-btn active" onclick="sortCards('rank',this)">Overall Rank</button>
+  <button class="sort-btn" onclick="sortCards('wins',this)">Most Wins</button>
+  <button class="sort-btn" onclick="sortCards('win_pct',this)">Win %</button>
+  <button class="sort-btn" onclick="sortCards('pf',this)">Total PF</button>
+  <button class="sort-btn" onclick="sortCards('championships',this)">Championships</button>
+  <button class="sort-btn" onclick="sortCards('seasons',this)">Seasons Played</button>
+</div>
+<main class="page">
+  <!-- SUMMARY STRIP -->
+  <div class="summary-strip">
+    <div class="summary-item"><span class="summary-num">19</span><div class="summary-lbl">Total Managers</div></div>
+    <div class="summary-item"><span class="summary-num">10</span><div class="summary-lbl">Seasons Played</div></div>
+    <div class="summary-item"><span class="summary-num">Tom</span><div class="summary-lbl">Most Wins (78)</div></div>
+    <div class="summary-item"><span class="summary-num">Larry</span><div class="summary-lbl">Most Championships (2)</div></div>
+    <div class="summary-item"><span class="summary-num">Dee</span><div class="summary-lbl">Also 2 Titles</div></div>
+    <div class="summary-item"><span class="summary-num">Cory H.</span><div class="summary-lbl">Best Win % (67.9%)</div></div>
+  </div>
+
+  <!-- MANAGER CARDS -->
+  <div id="managers" style="scroll-margin-top:110px;">
+    <div class="section-eyebrow">Career Profiles</div>
+    <h2 class="section-title">Manager Records</h2>
+    <div class="section-divider"></div>
+    <div class="cards-grid" id="cardsGrid">
+
+    <div class="mgr-card" data-name="Tom">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#1</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Tom</span>
+            <div class="mgr-trophies"><span class="trophy gold" title="Champion">🏆</span><span class="trophy silver" title="Runner-Up">🥈 ×2</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">Tom's Fabulous Team</span> · <span class="team-alias">Tom's Wondrous Team</span> · <span class="team-alias">Tommy Noles</span></div>
+        </div>
+        <div class="mgr-seasons">10<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">78–60</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:57%;background:#c9a84c"></div></div>
+          <div class="stat-sub">56.5% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">21,798.6</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">2,179.9 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val positive">+970.4</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge champ-finish">🏆</span> / #8</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">1 title · 2 runner-ups</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Larry">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#2</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Larry</span>
+            <div class="mgr-trophies"><span class="trophy gold" title="Championships">🏆 ×2</span><span class="trophy silver" title="Runner-Up">🥈</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">Larry's Team</span> · <span class="team-alias">The Vagitarians</span></div>
+        </div>
+        <div class="mgr-seasons">10<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">75–63</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:54%;background:#2d5a3d"></div></div>
+          <div class="stat-sub">54.3% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">21,586.8</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">2,158.7 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val positive">+1,108.7</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge champ-finish">🏆</span> / #10</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">2 titles · 1 runner-up</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Collin">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#3</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Collin</span>
+            <div class="mgr-trophies"><span class="trophy silver" title="Runner-Up">🥈</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">Captain Col</span> · <span class="team-alias">Noisy Neighbors</span> · <span class="team-alias">Seminoles Suck</span> · <span class="team-alias">The Real Slim Brady</span> · <span class="team-alias">Kirk Thuggins</span></div>
+        </div>
+        <div class="mgr-seasons">10<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">68–70</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:49%;background:#2d5a3d"></div></div>
+          <div class="stat-sub">49.3% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">20,086.9</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">2,008.7 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val negative">-69.1</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge">#2</span> / #11</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">0 titles · 1 runner-up</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Dominic">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#4</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Dominic</span>
+            <div class="mgr-trophies"><span class="trophy gold" title="Champion">🏆</span><span class="trophy silver" title="Runner-Up">🥈</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">Tyreek’s Kid Beaters</span> · <span class="team-alias">Dominic's Team</span> · <span class="team-alias">Beats by Ray</span> · <span class="team-alias">Team Suck Me</span></div>
+        </div>
+        <div class="mgr-seasons">8<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">61–47</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:56%;background:#c9a84c"></div></div>
+          <div class="stat-sub">56.5% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">17,423.0</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">2,177.9 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val positive">+789.4</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge champ-finish">🏆</span> / #8</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">1 title · 1 runner-up</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Al">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#5</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Al</span>
+            <div class="mgr-trophies"><span class="trophy gold" title="Champion">🏆</span><span class="trophy silver" title="Runner-Up">🥈</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">Al's Agreeable Team</span> · <span class="team-alias">Al's Brandon Bruiser</span></div>
+        </div>
+        <div class="mgr-seasons">10<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">60–78</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:43%;background:#7a3333"></div></div>
+          <div class="stat-sub">43.5% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">19,241.9</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">1,924.2 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val negative">-1,474.0</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge champ-finish">🏆</span> / #9</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">1 title · 1 runner-up</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Antonio">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#6</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Antonio</span>
+            <div class="mgr-trophies"><span class="trophy gold" title="Champion">🏆</span><span class="trophy silver" title="Runner-Up">🥈</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">Antonio</span></div>
+        </div>
+        <div class="mgr-seasons">7<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">54–39</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:58%;background:#c9a84c"></div></div>
+          <div class="stat-sub">58.1% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">15,473.1</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">2,210.4 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val positive">+726.2</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge champ-finish">🏆</span> / #6</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">1 title · 1 runner-up</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Nicky">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#7</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Nicky</span>
+            <div class="mgr-trophies"><span class="trophy gold" title="Champion">🏆</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">ngar’s shitty team</span> · <span class="team-alias">Nicholas's Team</span> · <span class="team-alias">Nicky's Off-Season</span> · <span class="team-alias">Nicky’s Off-Season</span></div>
+        </div>
+        <div class="mgr-seasons">10<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">49–89</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:36%;background:#7a3333"></div></div>
+          <div class="stat-sub">35.5% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">19,136.4</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">1,913.6 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val negative">-1,359.5</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge champ-finish">🏆</span> / #12</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">1 title · 0 runner-ups</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Dylan">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#8</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Dylan</span>
+            <div class="mgr-trophies"><span class="trophy silver" title="Runner-Up">🥈</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">Big D</span> · <span class="team-alias">Dylan is #1</span></div>
+        </div>
+        <div class="mgr-seasons">5<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">41–30</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:58%;background:#c9a84c"></div></div>
+          <div class="stat-sub">57.7% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">10,379.7</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">2,075.9 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val positive">+301.8</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge">#2</span> / #9</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">0 titles · 1 runner-up</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Devere">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#9</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Devere</span>
+            <div class="mgr-trophies"><span class="trophy silver" title="Runner-Up">🥈</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">Devere's Remarkable Team</span> · <span class="team-alias">Devere's Team</span> · <span class="team-alias">tammy's Team</span></div>
+        </div>
+        <div class="mgr-seasons">7<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">41–58</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:41%;background:#7a3333"></div></div>
+          <div class="stat-sub">41.4% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">13,930.1</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">1,990.0 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val negative">-644.0</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge">#2</span> / #10</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">0 titles · 1 runner-up</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Dee">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#10</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Dee</span>
+            <div class="mgr-trophies"><span class="trophy gold" title="Championships">🏆 ×2</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">Big Daddy</span></div>
+        </div>
+        <div class="mgr-seasons">5<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">32–35</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:48%;background:#2d5a3d"></div></div>
+          <div class="stat-sub">47.8% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">10,922.9</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">2,184.6 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val negative">-29.4</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge champ-finish">🏆</span> / #12</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">2 titles · 0 runner-ups</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Joey">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#11</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Joey</span>
+            <div class="mgr-trophies"><span class="trophy none">—</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">Bulls Mafia</span> · <span class="team-alias">Killer B’s</span> · <span class="team-alias">Los Tigres</span></div>
+        </div>
+        <div class="mgr-seasons">3<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">23–16</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:59%;background:#c9a84c"></div></div>
+          <div class="stat-sub">59.0% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">6,349.0</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">2,116.3 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val positive">+249.5</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge">#5</span> / #8</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">0 titles · 0 runner-ups</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Cory Harman">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#12</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Cory Harman</span>
+            <div class="mgr-trophies"><span class="trophy none">—</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">Cory Harman's Nice Team</span></div>
+        </div>
+        <div class="mgr-seasons">2<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">19–9</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:68%;background:#c9a84c"></div></div>
+          <div class="stat-sub">67.9% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">4,694.6</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">2,347.3 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val positive">+276.7</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge">#3</span> / #6</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">0 titles · 0 runner-ups</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Giovanny">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#13</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Giovanny</span>
+            <div class="mgr-trophies"><span class="trophy gold" title="Champion">🏆</span><span class="trophy silver" title="Runner-Up">🥈</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">giovanny's Team</span></div>
+        </div>
+        <div class="mgr-seasons">2<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">18–10</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:64%;background:#c9a84c"></div></div>
+          <div class="stat-sub">64.3% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">4,539.2</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">2,269.6 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val positive">+313.6</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge champ-finish">🏆</span> / #2</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">1 title · 1 runner-up</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Scott">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#14</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Scott</span>
+            <div class="mgr-trophies"><span class="trophy none">—</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">LIKE A BROCK</span> · <span class="team-alias">TAKE MY MONEY</span></div>
+        </div>
+        <div class="mgr-seasons">3<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">17–22</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:44%;background:#7a3333"></div></div>
+          <div class="stat-sub">43.6% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">5,984.6</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">1,994.9 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val negative">-435.1</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge">#5</span> / #10</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">0 titles · 0 runner-ups</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="John">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#15</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">John</span>
+            <div class="mgr-trophies"><span class="trophy none">—</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">Cupcake Lover</span> · <span class="team-alias">Cupcake Lover 445</span></div>
+        </div>
+        <div class="mgr-seasons">2<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">15–13</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:54%;background:#2d5a3d"></div></div>
+          <div class="stat-sub">53.6% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">4,674.4</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">2,337.2 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val positive">+136.3</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge">#4</span> / #9</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">0 titles · 0 runner-ups</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Ricky">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#16</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Ricky</span>
+            <div class="mgr-trophies"><span class="trophy none">—</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">Ram Man</span></div>
+        </div>
+        <div class="mgr-seasons">2<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">14–14</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:50%;background:#2d5a3d"></div></div>
+          <div class="stat-sub">50.0% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">4,360.3</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">2,180.2 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val negative">-152.6</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge">#5</span> / #7</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">0 titles · 0 runner-ups</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Matt">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#17</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Matt</span>
+            <div class="mgr-trophies"><span class="trophy none">—</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">Matt's Optimal Team</span> · <span class="team-alias">Matt's Team</span></div>
+        </div>
+        <div class="mgr-seasons">2<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">11–19</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:37%;background:#7a3333"></div></div>
+          <div class="stat-sub">36.7% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">3,048.9</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">1,524.4 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val negative">-570.1</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge">#7</span> / #7</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">0 titles · 0 runner-ups</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Zach">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#18</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Zach</span>
+            <div class="mgr-trophies"><span class="trophy none">—</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">zach's Awesome Team</span></div>
+        </div>
+        <div class="mgr-seasons">1<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">7–8</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:47%;background:#2d5a3d"></div></div>
+          <div class="stat-sub">46.7% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">2,412.0</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">2,412.0 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val negative">-101.0</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge">#5</span> / #5</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">0 titles · 0 runner-ups</div>
+        </div>
+      </div>
+    </div>
+    <div class="mgr-card" data-name="Alex">
+      <div class="mgr-card-header">
+        <div class="mgr-rank">#19</div>
+        <div class="mgr-info">
+          <div class="mgr-name-row">
+            <span class="mgr-name">Alex</span>
+            <div class="mgr-trophies"><span class="trophy none">—</span></div>
+          </div>
+          <div class="mgr-teams"><span class="team-alias">JPPs Fireworks Inc.</span></div>
+        </div>
+        <div class="mgr-seasons">1<span>seasons</span></div>
+      </div>
+      <div class="mgr-stats-grid">
+        <div class="stat-box">
+          <div class="stat-val">5–8</div>
+          <div class="stat-lbl">Career Record</div>
+          <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:38%;background:#7a3333"></div></div>
+          <div class="stat-sub">38.5% win rate</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val">1,851.3</div>
+          <div class="stat-lbl">Total Points For</div>
+          <div class="stat-sub">1,851.3 per season</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val negative">-37.7</div>
+          <div class="stat-lbl">Point Differential</div>
+          <div class="stat-sub">PF minus PA all-time</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val"><span class="finish-badge">#7</span> / #7</div>
+          <div class="stat-lbl">Best / Worst Finish</div>
+          <div class="stat-sub">0 titles · 0 runner-ups</div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- CHAMPIONSHIP TIMELINE -->
+  <div id="timeline" style="scroll-margin-top:110px;margin-top:4rem;">
+    <div class="section-eyebrow">Year by Year</div>
+    <h2 class="section-title">Championship History</h2>
+    <div class="section-divider"></div>
+    <div class="timeline">
+
+    <div class="timeline-row">
+      <div class="timeline-year">2025</div>
+      <div class="timeline-entries">
+        <div class="timeline-entry gold"><span class="tl-medal">🏆</span><span class="tl-name">Nicky</span><span class="tl-label">Champion</span></div>
+        <div class="timeline-entry silver"><span class="tl-medal">🥈</span><span class="tl-name">Al</span><span class="tl-label">Runner-Up</span></div>
+        <div class="timeline-entry bronze"><span class="tl-medal">🥉</span><span class="tl-name">Larry</span><span class="tl-label">3rd Place</span></div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-year">2024</div>
+      <div class="timeline-entries">
+        <div class="timeline-entry gold"><span class="tl-medal">🏆</span><span class="tl-name">Dominic</span><span class="tl-label">Champion</span></div>
+        <div class="timeline-entry silver"><span class="tl-medal">🥈</span><span class="tl-name">Devere</span><span class="tl-label">Runner-Up</span></div>
+        <div class="timeline-entry bronze"><span class="tl-medal">🥉</span><span class="tl-name">Cory Harman</span><span class="tl-label">3rd Place</span></div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-year">2023</div>
+      <div class="timeline-entries">
+        <div class="timeline-entry gold"><span class="tl-medal">🏆</span><span class="tl-name">Dee</span><span class="tl-label">Champion</span></div>
+        <div class="timeline-entry silver"><span class="tl-medal">🥈</span><span class="tl-name">Tom</span><span class="tl-label">Runner-Up</span></div>
+        <div class="timeline-entry bronze"><span class="tl-medal">🥉</span><span class="tl-name">Antonio</span><span class="tl-label">3rd Place</span></div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-year">2022</div>
+      <div class="timeline-entries">
+        <div class="timeline-entry gold"><span class="tl-medal">🏆</span><span class="tl-name">Al</span><span class="tl-label">Champion</span></div>
+        <div class="timeline-entry silver"><span class="tl-medal">🥈</span><span class="tl-name">Dominic</span><span class="tl-label">Runner-Up</span></div>
+        <div class="timeline-entry bronze"><span class="tl-medal">🥉</span><span class="tl-name">Tom</span><span class="tl-label">3rd Place</span></div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-year">2021</div>
+      <div class="timeline-entries">
+        <div class="timeline-entry gold"><span class="tl-medal">🏆</span><span class="tl-name">Dee</span><span class="tl-label">Champion</span></div>
+        <div class="timeline-entry silver"><span class="tl-medal">🥈</span><span class="tl-name">Antonio</span><span class="tl-label">Runner-Up</span></div>
+        <div class="timeline-entry bronze"><span class="tl-medal">🥉</span><span class="tl-name">Nicky</span><span class="tl-label">3rd Place</span></div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-year">2020</div>
+      <div class="timeline-entries">
+        <div class="timeline-entry gold"><span class="tl-medal">🏆</span><span class="tl-name">Antonio</span><span class="tl-label">Champion</span></div>
+        <div class="timeline-entry silver"><span class="tl-medal">🥈</span><span class="tl-name">Collin</span><span class="tl-label">Runner-Up</span></div>
+        <div class="timeline-entry bronze"><span class="tl-medal">🥉</span><span class="tl-name">Dylan</span><span class="tl-label">3rd Place</span></div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-year">2019</div>
+      <div class="timeline-entries">
+        <div class="timeline-entry gold"><span class="tl-medal">🏆</span><span class="tl-name">Tom</span><span class="tl-label">Champion</span></div>
+        <div class="timeline-entry silver"><span class="tl-medal">🥈</span><span class="tl-name">Giovanny</span><span class="tl-label">Runner-Up</span></div>
+        <div class="timeline-entry bronze"><span class="tl-medal">🥉</span><span class="tl-name">Devere</span><span class="tl-label">3rd Place</span></div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-year">2018</div>
+      <div class="timeline-entries">
+        <div class="timeline-entry gold"><span class="tl-medal">🏆</span><span class="tl-name">Giovanny</span><span class="tl-label">Champion</span></div>
+        <div class="timeline-entry silver"><span class="tl-medal">🥈</span><span class="tl-name">Larry</span><span class="tl-label">Runner-Up</span></div>
+        <div class="timeline-entry bronze"><span class="tl-medal">🥉</span><span class="tl-name">Tom</span><span class="tl-label">3rd Place</span></div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-year">2017</div>
+      <div class="timeline-entries">
+        <div class="timeline-entry gold"><span class="tl-medal">🏆</span><span class="tl-name">Larry</span><span class="tl-label">Champion</span></div>
+        <div class="timeline-entry silver"><span class="tl-medal">🥈</span><span class="tl-name">Dylan</span><span class="tl-label">Runner-Up</span></div>
+        <div class="timeline-entry bronze"><span class="tl-medal">🥉</span><span class="tl-name">Collin</span><span class="tl-label">3rd Place</span></div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-year">2016</div>
+      <div class="timeline-entries">
+        <div class="timeline-entry gold"><span class="tl-medal">🏆</span><span class="tl-name">Larry</span><span class="tl-label">Champion</span></div>
+        <div class="timeline-entry silver"><span class="tl-medal">🥈</span><span class="tl-name">Tom</span><span class="tl-label">Runner-Up</span></div>
+        <div class="timeline-entry bronze"><span class="tl-medal">🥉</span><span class="tl-name">Dylan</span><span class="tl-label">3rd Place</span></div>
+      </div>
+    </div>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-logo">The Grove Championship</div>
+  <div class="footer-links">
+    <a class="footer-link" href="index.html">Home</a>
+    <a class="footer-link" href="rules.html">Rules</a>
+    <a class="footer-link" href="standings.html">Standings</a>
+    <a class="footer-link" href="draft.html">Draft History</a>
+    <a class="footer-link" href="managers.html">Managers</a>
+    <a class="footer-link" href="scoring.html">Scoring</a>
+  </div>
+  <p class="footer-copy">The Grove Championship · Est. 2016 · Sleeper Fantasy Football</p>
+</footer>
+<script>
+const managerData = [{"rank": 1, "name": "Tom", "seasons": 10, "wins": 78, "losses": 60, "win_pct": 0.5652173913043478, "total_pf": 21798.590000000004, "total_pa": 20828.239999999998, "pf_per_season": 2179.8590000000004, "pf_pa": 970.3500000000058, "championships": 1, "runner_ups": 2, "best_finish": 1, "worst_finish": 8}, {"rank": 2, "name": "Larry", "seasons": 10, "wins": 75, "losses": 63, "win_pct": 0.5434782608695652, "total_pf": 21586.75, "total_pa": 20478.03, "pf_per_season": 2158.675, "pf_pa": 1108.7200000000012, "championships": 2, "runner_ups": 1, "best_finish": 1, "worst_finish": 10}, {"rank": 3, "name": "Collin", "seasons": 10, "wins": 68, "losses": 70, "win_pct": 0.4927536231884058, "total_pf": 20086.880000000005, "total_pa": 20155.94, "pf_per_season": 2008.6880000000006, "pf_pa": -69.05999999999403, "championships": 0, "runner_ups": 1, "best_finish": 2, "worst_finish": 11}, {"rank": 4, "name": "Dominic", "seasons": 8, "wins": 61, "losses": 47, "win_pct": 0.5648148148148148, "total_pf": 17422.96, "total_pa": 16633.58, "pf_per_season": 2177.87, "pf_pa": 789.3799999999974, "championships": 1, "runner_ups": 1, "best_finish": 1, "worst_finish": 8}, {"rank": 5, "name": "Al", "seasons": 10, "wins": 60, "losses": 78, "win_pct": 0.43478260869565216, "total_pf": 19241.86, "total_pa": 20715.87, "pf_per_season": 1924.1860000000001, "pf_pa": -1474.0099999999984, "championships": 1, "runner_ups": 1, "best_finish": 1, "worst_finish": 9}, {"rank": 6, "name": "Antonio", "seasons": 7, "wins": 54, "losses": 39, "win_pct": 0.5806451612903226, "total_pf": 15473.090000000002, "total_pa": 14746.86, "pf_per_season": 2210.441428571429, "pf_pa": 726.2300000000014, "championships": 1, "runner_ups": 1, "best_finish": 1, "worst_finish": 6}, {"rank": 7, "name": "Nicky", "seasons": 10, "wins": 49, "losses": 89, "win_pct": 0.35507246376811596, "total_pf": 19136.399999999998, "total_pa": 20495.940000000002, "pf_per_season": 1913.6399999999999, "pf_pa": -1359.5400000000045, "championships": 1, "runner_ups": 0, "best_finish": 1, "worst_finish": 12}, {"rank": 8, "name": "Dylan", "seasons": 5, "wins": 41, "losses": 30, "win_pct": 0.5774647887323944, "total_pf": 10379.69, "total_pa": 10077.92, "pf_per_season": 2075.938, "pf_pa": 301.77000000000044, "championships": 0, "runner_ups": 1, "best_finish": 2, "worst_finish": 9}, {"rank": 9, "name": "Devere", "seasons": 7, "wins": 41, "losses": 58, "win_pct": 0.41414141414141414, "total_pf": 13930.11, "total_pa": 14574.09, "pf_per_season": 1990.0157142857145, "pf_pa": -643.9799999999996, "championships": 0, "runner_ups": 1, "best_finish": 2, "worst_finish": 10}, {"rank": 10, "name": "Dee", "seasons": 5, "wins": 32, "losses": 35, "win_pct": 0.47761194029850745, "total_pf": 10922.94, "total_pa": 10952.32, "pf_per_season": 2184.588, "pf_pa": -29.3799999999992, "championships": 2, "runner_ups": 0, "best_finish": 1, "worst_finish": 12}, {"rank": 11, "name": "Joey", "seasons": 3, "wins": 23, "losses": 16, "win_pct": 0.5897435897435898, "total_pf": 6348.960000000001, "total_pa": 6099.5, "pf_per_season": 2116.32, "pf_pa": 249.46000000000095, "championships": 0, "runner_ups": 0, "best_finish": 5, "worst_finish": 8}, {"rank": 12, "name": "Cory Harman", "seasons": 2, "wins": 19, "losses": 9, "win_pct": 0.6785714285714286, "total_pf": 4694.55, "total_pa": 4417.83, "pf_per_season": 2347.275, "pf_pa": 276.72000000000025, "championships": 0, "runner_ups": 0, "best_finish": 3, "worst_finish": 6}, {"rank": 13, "name": "Giovanny", "seasons": 2, "wins": 18, "losses": 10, "win_pct": 0.6428571428571429, "total_pf": 4539.25, "total_pa": 4225.7, "pf_per_season": 2269.625, "pf_pa": 313.5500000000002, "championships": 1, "runner_ups": 1, "best_finish": 1, "worst_finish": 2}, {"rank": 14, "name": "Scott", "seasons": 3, "wins": 17, "losses": 22, "win_pct": 0.4358974358974359, "total_pf": 5984.610000000001, "total_pa": 6419.68, "pf_per_season": 1994.8700000000001, "pf_pa": -435.0699999999997, "championships": 0, "runner_ups": 0, "best_finish": 5, "worst_finish": 10}, {"rank": 15, "name": "John", "seasons": 2, "wins": 15, "losses": 13, "win_pct": 0.5357142857142857, "total_pf": 4674.43, "total_pa": 4538.16, "pf_per_season": 2337.215, "pf_pa": 136.27000000000044, "championships": 0, "runner_ups": 0, "best_finish": 4, "worst_finish": 9}, {"rank": 16, "name": "Ricky", "seasons": 2, "wins": 14, "losses": 14, "win_pct": 0.5, "total_pf": 4360.34, "total_pa": 4512.92, "pf_per_season": 2180.17, "pf_pa": -152.57999999999993, "championships": 0, "runner_ups": 0, "best_finish": 5, "worst_finish": 7}, {"rank": 17, "name": "Matt", "seasons": 2, "wins": 11, "losses": 19, "win_pct": 0.36666666666666664, "total_pf": 3048.86, "total_pa": 3618.9900000000002, "pf_per_season": 1524.43, "pf_pa": -570.1300000000001, "championships": 0, "runner_ups": 0, "best_finish": 7, "worst_finish": 7}, {"rank": 18, "name": "Zach", "seasons": 1, "wins": 7, "losses": 8, "win_pct": 0.4666666666666667, "total_pf": 2412.03, "total_pa": 2513.01, "pf_per_season": 2412.03, "pf_pa": -100.98000000000002, "championships": 0, "runner_ups": 0, "best_finish": 5, "worst_finish": 5}, {"rank": 19, "name": "Alex", "seasons": 1, "wins": 5, "losses": 8, "win_pct": 0.38461538461538464, "total_pf": 1851.32, "total_pa": 1889.04, "pf_per_season": 1851.32, "pf_pa": -37.72000000000003, "championships": 0, "runner_ups": 0, "best_finish": 7, "worst_finish": 7}];
+
+function sortCards(key, btn) {
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const grid = document.getElementById('cardsGrid');
+  const cards = Array.from(grid.querySelectorAll('.mgr-card'));
+  cards.sort((a, b) => {
+    const na = a.dataset.name, nb = b.dataset.name;
+    const ma = managerData.find(m => m.name === na);
+    const mb = managerData.find(m => m.name === nb);
+    if (!ma || !mb) return 0;
+    switch(key) {
+      case 'rank': return ma.rank - mb.rank;
+      case 'wins': return mb.wins - ma.wins;
+      case 'win_pct': return mb.win_pct - ma.win_pct;
+      case 'pf': return mb.total_pf - ma.total_pf;
+      case 'championships': return mb.championships - ma.championships || mb.runner_ups - ma.runner_ups;
+      case 'seasons': return mb.seasons - ma.seasons || ma.rank - mb.rank;
+      default: return 0;
+    }
+  });
+  cards.forEach(c => grid.appendChild(c));
+}
+</script>
+</body>
+</html>
