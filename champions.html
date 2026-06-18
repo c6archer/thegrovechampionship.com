@@ -4,153 +4,224 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Champion History | The Grove Championship</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --green-900:#0b1f14;--green-800:#112a1c;--green-700:#1a3a2a;--green-600:#2d5a3d;--green-500:#3d7a52;
-  --gold-500:#c9a84c;--gold-400:#dbbe72;--gold-300:#ead49a;--cream:#faf7f0;
-  --text-dark:#0f1f16;--text-muted:#5a7060;--text-faint:#8a9e90;
-  --border:rgba(201,168,76,0.18);
+  --ink:#0a0a0a;--ink-mid:#2a2a2a;--ink-muted:#5a5a5a;--ink-faint:#9a9a9a;
+  --paper:#fafaf7;--paper-warm:#f4f3ee;--paper-rule:#e0ddd5;
+  --gold:#b8923a;--gold-light:#d4aa55;--gold-pale:rgba(184,146,58,0.1);
+  --green-ink:#2d5a3d;
+  --rule:1px solid var(--paper-rule);
 }
 html{scroll-behavior:smooth;}
-body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text-dark);}
+body{font-family:'Source Serif 4',serif;background:var(--paper);color:var(--ink);min-height:100vh;}
 
-/* NAVBAR */
-.navbar{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(11,31,20,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.15);height:60px;display:flex;align-items:center;padding:0 2rem;gap:2rem;}
-.navbar-brand{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.08em;color:var(--gold-500);text-decoration:none;flex-shrink:0;}
-.navbar-links{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;margin-left:auto;}
-.navbar-links::-webkit-scrollbar{display:none;}
-.nav-link{font-size:0.75rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.5);text-decoration:none;padding:0.5rem 0.9rem;border-radius:4px;white-space:nowrap;transition:color 0.2s,background 0.2s;}
-.nav-link:hover{color:var(--gold-400);background:rgba(201,168,76,0.08);}
-.nav-link.active{color:var(--gold-500);}
+/* NAV — broadsheet masthead */
+nav{background:var(--paper);border-bottom:3px solid var(--ink);padding:0 2rem;position:sticky;top:0;z-index:200;}
+.masthead{display:flex;align-items:center;justify-content:space-between;padding:0.85rem 0 0.5rem;border-bottom:var(--rule);}
+.masthead-left{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.05em;color:var(--ink-muted);line-height:1.4;}
+.brand{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900;letter-spacing:-0.02em;color:var(--ink);text-decoration:none;text-align:center;line-height:1;}
+.brand span{display:block;font-size:0.52rem;font-weight:400;letter-spacing:0.22em;text-transform:uppercase;color:var(--ink-muted);margin-top:0.2rem;font-family:'DM Mono',monospace;}
+.masthead-right{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.05em;color:var(--ink-muted);text-align:right;line-height:1.4;}
+.nav-links{display:flex;justify-content:center;gap:0;padding:0.4rem 0;overflow-x:auto;scrollbar-width:none;}
+.nav-links::-webkit-scrollbar{display:none;}
+.nav-links a, .nav-links span.nav-link{font-family:'DM Mono',monospace;font-size:0.6rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-mid);text-decoration:none;padding:0.32rem 0.8rem;border-right:var(--rule);transition:color 0.15s;white-space:nowrap;}
+.nav-links a:first-child{border-left:var(--rule);}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.nav-links span.nav-link.disabled{color:var(--ink-faint);opacity:0.45;cursor:default;}
 
-/* HERO */
-.page-hero{background:var(--green-900);padding:7rem 2rem 4rem;position:relative;overflow:hidden;text-align:center;}
-.page-hero::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 58px,rgba(201,168,76,0.05) 58px,rgba(201,168,76,0.05) 60px);pointer-events:none;}
-.hero-trophy{font-size:4rem;display:block;margin-bottom:1rem;position:relative;}
-.page-eyebrow{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold-500);margin-bottom:0.75rem;position:relative;}
-.page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,7vw,5.5rem);letter-spacing:0.05em;color:#fff;line-height:1;margin-bottom:0.75rem;position:relative;}
-.page-sub{font-size:0.85rem;color:rgba(255,255,255,0.35);letter-spacing:0.08em;font-weight:300;position:relative;}
+/* PAGE TITLE BANNER (inner pages) */
+.title-banner{max-width:1100px;margin:0 auto;padding:2.25rem 2rem 1.5rem;border-bottom:3px double var(--paper-rule);}
+.tb-kicker{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);border-top:2px solid var(--gold);display:inline-block;padding-top:0.3rem;margin-bottom:0.85rem;}
+.tb-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,5vw,3.2rem);font-weight:900;letter-spacing:-0.02em;color:var(--ink);line-height:1.05;margin-bottom:0.5rem;}
+.tb-sub{font-size:0.92rem;color:var(--ink-muted);font-style:italic;font-weight:300;}
 
-/* JUMP NAV */
-.jump-nav{background:var(--green-700);border-bottom:1px solid rgba(201,168,76,0.15);padding:0 2rem;display:flex;overflow-x:auto;scrollbar-width:none;}
+/* JUMP NAV — rule-separated like a section index */
+.jump-nav{max-width:1100px;margin:0 auto;padding:0.6rem 2rem;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;border-bottom:var(--rule);}
 .jump-nav::-webkit-scrollbar{display:none;}
-.jump-link{font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.45);text-decoration:none;padding:0.9rem 1rem;white-space:nowrap;border-bottom:2px solid transparent;transition:color 0.2s,border-color 0.2s;}
-.jump-link:hover{color:var(--gold-400);border-bottom-color:var(--gold-500);}
+.jump-link{font-family:'DM Mono',monospace;font-size:0.62rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);text-decoration:none;padding:0.4rem 0.9rem;white-space:nowrap;border-bottom:2px solid transparent;transition:color 0.15s,border-color 0.15s;}
+.jump-link:hover{color:var(--gold);border-bottom-color:var(--gold);}
 
-/* PAGE */
-.page{max-width:1100px;margin:0 auto;padding:4rem 2rem 6rem;}
+/* PAGE LAYOUT */
+.page{max-width:1100px;margin:0 auto;padding:2.5rem 2rem 5rem;}
+.section{margin-bottom:3rem;scroll-margin-top:90px;}
+.s-rule{display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;}
+.s-rule::before,.s-rule::after{content:'';flex:1;height:1px;background:var(--ink);}
+.s-rule::before{max-width:30px;}
+.s-label{font-family:'Playfair Display',serif;font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;white-space:nowrap;color:var(--ink);}
+.s-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--ink);margin-bottom:1.1rem;line-height:1.2;}
 
-/* SECTION */
-.section{margin-bottom:5rem;scroll-margin-top:110px;}
-.section-eyebrow{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold-500);margin-bottom:0.5rem;}
-.section-title{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:0.05em;color:var(--green-700);margin-bottom:1.5rem;}
-.section-divider{height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.3),transparent);margin-bottom:2rem;}
+/* TABLE — compact newspaper style for big datasets */
+table{width:100%;border-collapse:collapse;}
+thead tr{border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);}
+thead th{font-family:'DM Mono',monospace;font-size:0.56rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);padding:0.45rem 0.65rem;text-align:left;background:var(--paper-warm);}
+thead th:not(:first-child):not(:nth-child(2)){text-align:right;}
+tbody tr{border-bottom:var(--rule);}
+tbody tr:hover{background:var(--gold-pale);}
+td{padding:0.5rem 0.65rem;font-size:0.82rem;color:var(--ink);}
+td:not(:first-child):not(:nth-child(2)){text-align:right;font-family:'DM Mono',monospace;font-size:0.76rem;color:var(--ink-muted);}
+tbody tr:last-child{border-bottom:2px solid var(--ink);}
+.rank-cell,.rank,.num.rd{font-family:'DM Mono',monospace;font-size:0.76rem;color:var(--ink-faint);width:32px;}
+.team-name,.tname,.player-name,.mgr-cell{font-weight:600;font-family:'Source Serif 4',serif;}
+.badge,.playoff-badge,.pos-badge{font-family:'DM Mono',monospace;font-size:0.54rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;padding:0.1rem 0.38rem;margin-left:0.4rem;vertical-align:middle;border:1px solid var(--gold);color:var(--gold);border-radius:2px;background:transparent;}
+.badge.champ,.champ-badge,.badge.gold{border-color:var(--gold);color:var(--gold);background:var(--gold-pale);}
+.playoff-row td{background:rgba(184,146,58,0.035) !important;}
 
-/* CHAMPION CARDS — one per season */
-.champ-cards{display:flex;flex-direction:column;gap:1.25rem;}
+/* COMPACT TABLE MODIFIER for very large datasets (draft history) */
+table.compact td, table.compact th{padding:0.4rem 0.55rem;font-size:0.76rem;}
+table.compact thead th{font-size:0.54rem;}
 
-.champ-card{border-radius:14px;overflow:hidden;border:1px solid var(--border);display:grid;grid-template-columns:140px 1fr;}
-@media(max-width:600px){.champ-card{grid-template-columns:1fr;}}
+/* CARDS / INFO GRID */
+.card-grid,.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--paper-rule);border:1px solid var(--paper-rule);}
+.card,.info-card{background:var(--paper);padding:1rem 1.25rem;}
+.card-label,.info-label{font-family:'DM Mono',monospace;font-size:0.58rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:0.35rem;}
+.card-value,.info-value{font-family:'Source Serif 4',serif;font-size:0.95rem;font-weight:600;color:var(--ink);line-height:1.3;}
+.card-value.highlight,.info-value.gold{font-family:'Playfair Display',serif;color:var(--gold);font-size:1.15rem;font-weight:700;}
 
-.champ-year-panel{background:var(--green-700);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem;position:relative;overflow:hidden;}
-.champ-year-panel::before{content:'🏆';position:absolute;font-size:5rem;opacity:0.07;top:50%;left:50%;transform:translate(-50%,-50%);}
-.champ-year{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:0.05em;color:var(--gold-500);line-height:1;position:relative;}
-.champ-season-label{font-size:0.62rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-top:0.3rem;position:relative;}
+/* SIDEBAR-STYLE CARD (used on champions/managers/draft-hub) */
+.sidebar-card{border-top:3px solid var(--ink);padding:1rem 0;margin-bottom:1.25rem;border-bottom:var(--rule);}
+.sc-label{font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;}
+.sc-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;line-height:1;margin-bottom:0.2rem;}
+.sc-sub{font-size:0.76rem;color:var(--ink-muted);font-style:italic;}
 
-.champ-details{background:#fff;padding:1.5rem;}
-.champ-winner-row{display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);}
-.champ-crown{font-size:1.8rem;}
-.champ-winner-info{flex:1;}
-.champ-winner-name{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.05em;color:var(--green-700);line-height:1;}
-.champ-winner-team{font-size:0.78rem;color:var(--text-muted);margin-top:0.15rem;}
-.champ-winner-badge{font-size:0.62rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:rgba(201,168,76,0.15);color:#7a5c1e;border:1px solid rgba(201,168,76,0.4);padding:0.25rem 0.6rem;border-radius:3px;white-space:nowrap;}
+/* CALLOUTS */
+.callout,.callout-gold{border-left:3px solid var(--ink);background:var(--paper-warm);padding:0.85rem 1.1rem;font-size:0.85rem;line-height:1.65;color:var(--ink-mid);margin-bottom:1.25rem;}
+.callout strong,.callout-gold strong{color:var(--ink);font-weight:700;}
+.callout-gold{border-left-color:var(--gold);}
+.callout-gold strong{color:var(--gold);}
 
-.champ-podium{display:flex;gap:1rem;flex-wrap:wrap;}
-.podium-entry{display:flex;align-items:center;gap:0.5rem;}
-.podium-medal{font-size:1.1rem;}
-.podium-info{}
-.podium-name{font-weight:600;font-size:0.88rem;color:var(--text-dark);}
-.podium-label{font-size:0.65rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);}
-.podium-team{font-size:0.72rem;color:var(--text-muted);}
+/* RULE LISTS */
+.rule-list{list-style:none;display:flex;flex-direction:column;gap:0.6rem;}
+.rule-list li{display:flex;gap:0.65rem;align-items:flex-start;font-size:0.85rem;line-height:1.6;color:var(--ink-mid);}
+.rule-list li::before{content:'—';color:var(--gold);flex-shrink:0;font-weight:700;}
 
-.champ-record{margin-left:auto;text-align:right;flex-shrink:0;}
-.champ-record-val{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.03em;color:var(--green-700);}
-.champ-record-lbl{font-size:0.62rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);}
+/* POSITION PILLS (roster page) */
+.positions-grid{display:flex;flex-wrap:wrap;gap:0.4rem;}
+.pos-pill{display:inline-flex;align-items:center;gap:0.4rem;padding:0.4rem 0.85rem;border:1px solid var(--ink);font-family:'DM Mono',monospace;font-size:0.72rem;font-weight:500;letter-spacing:0.03em;color:var(--ink);background:var(--paper);}
+.pos-pill.flex{border-color:var(--gold);color:var(--gold);}
+.pos-pill.bench{border-color:var(--ink-faint);color:var(--ink-muted);}
+.pos-pill.ir{border-color:#8a3333;color:#8a3333;}
 
-/* LEADERBOARD TABLE */
-.leaderboard-table{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
-.leaderboard-table thead{background:var(--green-700);}
-.leaderboard-table thead th{font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);padding:0.85rem 1rem;text-align:left;}
-.leaderboard-table thead th:not(:first-child):not(:nth-child(2)){text-align:center;}
-.leaderboard-table tbody tr{border-bottom:1px solid rgba(201,168,76,0.08);transition:background 0.15s;}
-.leaderboard-table tbody tr:last-child{border-bottom:none;}
-.leaderboard-table tbody tr:hover{background:rgba(201,168,76,0.04);}
-.leaderboard-table td{padding:0.85rem 1rem;font-size:0.88rem;background:#fff;color:var(--text-dark);}
-.leaderboard-table td:not(:first-child):not(:nth-child(2)){text-align:center;font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--text-muted);}
-.rank-num{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--text-faint);}
-.mgr-cell{font-weight:600;}
-.trophy-cell{font-size:1rem;}
-.repeat-badge{display:inline-block;font-size:0.58rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:rgba(201,168,76,0.15);color:#7a5c1e;border:1px solid rgba(201,168,76,0.35);padding:0.15rem 0.45rem;border-radius:3px;margin-left:0.4rem;vertical-align:middle;}
+/* SCORING TABLE POINTS COLORS */
+.pts.negative{color:#8a3333 !important;}
+.premium{font-family:'DM Mono',monospace;font-size:0.54rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;background:var(--gold-pale);color:var(--gold);border:1px solid var(--gold);padding:0.1rem 0.38rem;border-radius:2px;margin-left:0.4rem;vertical-align:middle;}
 
-/* RECORDS GRID */
-.records-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;}
-.record-card{background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;}
-.record-card-header{background:var(--green-700);padding:0.75rem 1.1rem;}
-.record-card-title{font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.5);}
-.record-entries{padding:0;}
-.record-entry{display:flex;align-items:center;padding:0.75rem 1.1rem;border-bottom:1px solid rgba(201,168,76,0.08);}
-.record-entry:last-child{border-bottom:none;}
-.record-pos{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--text-faint);width:28px;flex-shrink:0;}
-.record-entry-info{flex:1;}
-.record-name{font-weight:600;font-size:0.88rem;color:var(--text-dark);}
-.record-detail{font-size:0.72rem;color:var(--text-muted);margin-top:0.1rem;}
-.record-val{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.03em;color:var(--green-700);}
+/* YEAR FILTER / SORT / SEARCH BARS */
+.year-filter,.sort-bar,.search-bar{max-width:1100px;margin:0 auto;border-bottom:var(--rule);padding:0.55rem 2rem;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;}
+.filter-label,.sort-label{font-family:'DM Mono',monospace;font-size:0.58rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-muted);margin-right:0.3rem;}
+.yr-btn,.sort-btn{font-family:'DM Mono',monospace;font-size:0.66rem;font-weight:500;color:var(--ink-mid);background:transparent;border:1px solid var(--paper-rule);padding:0.3rem 0.65rem;cursor:pointer;transition:all 0.15s;}
+.yr-btn:hover,.sort-btn:hover{border-color:var(--gold);color:var(--gold);}
+.yr-btn.active,.sort-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.search-input{font-family:'Source Serif 4',serif;font-size:0.82rem;background:var(--paper);border:1px solid var(--paper-rule);padding:0.4rem 0.8rem;color:var(--ink);width:240px;outline:none;}
+.search-input:focus{border-color:var(--gold);}
+.search-count{font-family:'DM Mono',monospace;font-size:0.66rem;color:var(--ink-faint);}
+.pos-filter{display:flex;gap:0.3rem;margin-left:auto;}
+.pos-btn{font-family:'DM Mono',monospace;font-size:0.58rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:0.28rem 0.55rem;cursor:pointer;border:1px solid var(--paper-rule);background:transparent;color:var(--ink-muted);opacity:0.6;transition:opacity 0.15s;}
+.pos-btn:hover,.pos-btn.active{opacity:1;border-color:var(--ink);color:var(--ink);}
 
-/* SEASON SUMMARY TABLE */
-.season-table{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
-.season-table thead{background:var(--green-700);}
-.season-table thead th{font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);padding:0.75rem 1rem;text-align:center;}
-.season-table thead th:first-child{text-align:left;}
-.season-table tbody tr{border-bottom:1px solid rgba(201,168,76,0.08);}
-.season-table tbody tr:last-child{border-bottom:none;}
-.season-table tbody tr:hover{background:rgba(201,168,76,0.04);}
-.season-table td{padding:0.75rem 1rem;font-size:0.85rem;background:#fff;color:var(--text-muted);text-align:center;font-family:'DM Mono',monospace;}
-.season-table td:first-child{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--green-700);text-align:left;}
-.season-table td.champ-td{font-weight:600;color:var(--text-dark);font-family:'DM Sans',sans-serif;}
+/* VIEW / MANAGER TABS (draft history) */
+.view-tabs{display:flex;gap:0;margin-bottom:0.85rem;border-bottom:var(--rule);}
+.view-tab{font-family:'DM Mono',monospace;font-size:0.66rem;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-muted);background:transparent;border:none;border-bottom:2px solid transparent;padding:0.5rem 1rem;cursor:pointer;transition:color 0.15s,border-color 0.15s;margin-bottom:-1px;}
+.view-tab:hover{color:var(--ink);}
+.view-tab.active{color:var(--ink);border-bottom-color:var(--gold);}
+.mgr-tab-row{display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.85rem;}
+.mgr-tab{font-family:'DM Mono',monospace;font-size:0.68rem;font-weight:500;color:var(--ink-mid);background:var(--paper);border:1px solid var(--paper-rule);padding:0.4rem 0.75rem;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.mgr-tab:hover{border-color:var(--gold);color:var(--gold);}
+.mgr-tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.mgr-placeholder{font-size:0.85rem;color:var(--ink-faint);padding:1.5rem;text-align:center;border:var(--rule);font-style:italic;}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+@media(max-width:640px){.two-col{grid-template-columns:1fr;}}
+
+/* SEASON BLOCK (standings/draft) */
+.season-block{margin-bottom:3rem;scroll-margin-top:130px;}
+.season-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.85rem;padding-bottom:0.6rem;border-bottom:2px solid var(--ink);}
+.season-label{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--ink);}
+.team-count,.pick-count{font-family:'DM Mono',monospace;font-size:0.66rem;color:var(--ink-faint);letter-spacing:0.08em;}
+
+/* LEGEND */
+.legend{display:flex;gap:1.25rem;flex-wrap:wrap;margin-top:0.6rem;}
+.legend span{display:flex;align-items:center;gap:0.4rem;font-size:0.74rem;color:var(--ink-muted);font-family:'DM Mono',monospace;}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;}
+.dot-p,.dot-playoff{background:var(--ink-faint);}
+.dot-c,.dot-champ{background:var(--gold);}
 
 /* FOOTER */
-footer{background:var(--green-900);border-top:1px solid rgba(201,168,76,0.1);text-align:center;padding:2.5rem 2rem;}
-.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.1em;color:var(--gold-500);margin-bottom:0.75rem;}
-.footer-links{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-bottom:1rem;}
-.footer-link{font-size:0.72rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s;}
-.footer-link:hover{color:var(--gold-400);}
-.footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.2);letter-spacing:0.05em;}
+footer{background:var(--ink);text-align:center;padding:2.25rem 2rem;}
+.footer-logo{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;letter-spacing:-0.01em;color:var(--paper);margin-bottom:0.65rem;}
+.footer-links{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:0.85rem;}
+.footer-link{font-family:'DM Mono',monospace;font-size:0.62rem;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:rgba(250,250,247,0.4);text-decoration:none;transition:color 0.15s;}
+.footer-link:hover{color:var(--gold);}
+.footer-copy{font-family:'DM Mono',monospace;font-size:0.62rem;color:rgba(250,250,247,0.2);letter-spacing:0.04em;}
+
+
+/* CHAMPION CARDS */
+.champ-cards{display:flex;flex-direction:column;gap:0;border:var(--rule);}
+.champ-card{border-bottom:2px solid var(--ink);display:grid;grid-template-columns:110px 1fr;}
+.champ-card:last-child{border-bottom:none;}
+@media(max-width:600px){.champ-card{grid-template-columns:1fr;}}
+
+.champ-year-panel{background:var(--paper-warm);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.25rem 1rem;border-right:var(--rule);}
+@media(max-width:600px){.champ-year-panel{border-right:none;border-bottom:var(--rule);}}
+.champ-year{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;letter-spacing:-0.01em;color:var(--gold);line-height:1;}
+.champ-season-label{font-family:'DM Mono',monospace;font-size:0.56rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-faint);margin-top:0.3rem;}
+
+.champ-details{background:var(--paper);padding:1.1rem 1.4rem;}
+.champ-winner-row{display:flex;align-items:center;gap:0.65rem;margin-bottom:0.9rem;padding-bottom:0.9rem;border-bottom:var(--rule);}
+.champ-crown{font-size:1.4rem;}
+.champ-winner-info{flex:1;}
+.champ-winner-name{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--ink);line-height:1;}
+.champ-winner-team{font-size:0.76rem;color:var(--ink-muted);margin-top:0.15rem;font-style:italic;}
+.champ-winner-badge{font-family:'DM Mono',monospace;font-size:0.58rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;background:var(--gold-pale);color:var(--gold);border:1px solid var(--gold);padding:0.2rem 0.55rem;white-space:nowrap;}
+
+.champ-podium{display:flex;gap:1.25rem;flex-wrap:wrap;}
+.podium-entry{display:flex;align-items:center;gap:0.5rem;}
+.podium-medal{font-size:1rem;}
+.podium-name{font-weight:600;font-size:0.84rem;color:var(--ink);font-family:'Source Serif 4',serif;}
+.podium-label{font-family:'DM Mono',monospace;font-size:0.56rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-faint);}
+.podium-team{font-size:0.7rem;color:var(--ink-muted);font-style:italic;}
+
+.champ-record{margin-left:auto;text-align:right;flex-shrink:0;}
+.champ-record-val{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--ink);}
+.champ-record-lbl{font-family:'DM Mono',monospace;font-size:0.56rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);}
+
+/* repeat badge */
+.repeat-badge{font-family:'DM Mono',monospace;font-size:0.56rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;background:var(--gold-pale);color:var(--gold);border:1px solid var(--gold);padding:0.12rem 0.4rem;margin-left:0.4rem;vertical-align:middle;}
+
+/* LEADERBOARD TABLE — trophy cell */
+.trophy-cell{font-size:0.95rem;}
+.rank-num{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--ink-faint);font-weight:700;}
 </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <a class="navbar-brand" href="index.html">TGC</a>
-  <div class="navbar-links">
+<nav>
+  <div class="masthead">
+    <div class="masthead-left">Est. 2016<br>Section E</div>
+    <a class="brand" href="index.html">The Grove Championship<span>Fantasy Football · Since 2016</span></a>
+    <div class="masthead-right">10 Champions<br>2016–2025</div>
+  </div>
+  <div class="nav-links">
     <a class="nav-link" href="index.html">Home</a>
     <a class="nav-link" href="rules.html">Rules</a>
     <a class="nav-link" href="standings.html">Standings</a>
     <a class="nav-link" href="draft.html">Draft History</a>
     <a class="nav-link" href="managers.html">Managers</a>
     <a class="nav-link active" href="champions.html">Champions</a>
-    <a class="nav-link" href="#">Matchups</a>
+    <a class="nav-link" href="draft-hub.html">2026 Draft</a>
     <a class="nav-link" href="scoring.html">Scoring</a>
+    <span class="nav-link disabled" title="Coming soon">Matchups</span>
+    <span class="nav-link disabled" title="Coming soon">Records</span>
   </div>
 </nav>
 
-<header class="page-hero">
-  <span class="hero-trophy">🏆</span>
-  <div class="page-eyebrow">The Grove Championship · 2016–2025</div>
-  <h1 class="page-title">Champion History</h1>
-  <p class="page-sub">10 seasons · 10 champions · Every winner, runner-up, and podium finish</p>
-</header>
+<div class="title-banner">
+  <div class="tb-kicker">The Grove Championship · 2016–2025</div>
+  <h1 class="tb-title">Champion History</h1>
+  <p class="tb-sub">10 seasons · 10 champions · Every winner, runner-up, and podium finish</p>
+</div>
 
 <div class="jump-nav">
   <a class="jump-link" href="#seasons">Season by Season</a>
@@ -161,9 +232,8 @@ footer{background:var(--green-900);border-top:1px solid rgba(201,168,76,0.1);tex
 
   <!-- SEASON BY SEASON -->
   <section class="section" id="seasons">
-    <div class="section-eyebrow">Year by Year</div>
-    <h2 class="section-title">Season Champions</h2>
-    <div class="section-divider"></div>
+    <div class="s-rule"><span class="s-label">Year by Year</span></div>
+    <h2 class="s-title">Season Champions</h2>
     <div class="champ-cards">
 
       <!-- 2025 -->
@@ -401,9 +471,8 @@ footer{background:var(--green-900);border-top:1px solid rgba(201,168,76,0.1);tex
 
   <!-- ALL-TIME LEADERBOARD -->
   <section class="section" id="leaderboard">
-    <div class="section-eyebrow">All-Time Podium Finishes</div>
-    <h2 class="section-title">Championship Leaderboard</h2>
-    <div class="section-divider"></div>
+    <div class="s-rule"><span class="s-label">All-Time Podium Finishes</span></div>
+    <h2 class="s-title">Championship Leaderboard</h2>
     <table class="leaderboard-table">
       <thead>
         <tr><th>#</th><th>Manager</th><th>🏆 Titles</th><th>🥈 Runner-Ups</th><th>🥉 3rd Place</th><th>Total Podiums</th><th>Seasons</th></tr>
@@ -436,6 +505,7 @@ footer{background:var(--green-900);border-top:1px solid rgba(201,168,76,0.1);tex
     <a class="footer-link" href="draft.html">Draft History</a>
     <a class="footer-link" href="managers.html">Managers</a>
     <a class="footer-link" href="champions.html">Champions</a>
+    <a class="footer-link" href="draft-hub.html">2026 Draft</a>
     <a class="footer-link" href="scoring.html">Scoring</a>
   </div>
   <p class="footer-copy">The Grove Championship · Est. 2016 · Sleeper Fantasy Football</p>
