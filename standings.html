@@ -194,6 +194,7 @@ footer{background:var(--ink);text-align:center;padding:2.25rem 2rem;}
 <div class="year-filter">
   <span class="filter-label">Jump to:</span>
   <button class="yr-btn active" onclick="showYear('all', this)">All Years</button>
+  <button class="yr-btn" onclick="showYear('alltime', this)">All-Time</button>
   <button class="yr-btn" onclick="showYear('2025', this)">2025</button>
   <button class="yr-btn" onclick="showYear('2024', this)">2024</button>
   <button class="yr-btn" onclick="showYear('2023', this)">2023</button>
@@ -206,6 +207,212 @@ footer{background:var(--ink);text-align:center;padding:2.25rem 2rem;}
   <button class="yr-btn" onclick="showYear('2016', this)">2016</button>
 </div>
 <main class="page">
+      <!-- ALL TIME TABLE -->
+  <div class="season-block" id="sall" data-year="all">
+    <div class="season-header">
+      <span class="season-label">All-Time</span>
+      <span class="team-count">19 Managers &middot; 10 Seasons</span>
+    </div>
+    <table class="standings-table">
+      <thead>
+        <tr>
+          <th>#</th><th>Manager</th><th>Seasons</th><th>W</th><th>L</th><th>Win %</th><th>Total PF</th><th>Best Finish</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="rank-cell">1</td>
+          <td class="team-name">Tom&nbsp;<span class="badge champ">🏆</span></td>
+          <td class="num">10</td>
+          <td class="num">78</td>
+          <td class="num">60</td>
+          <td class="num">56.5%</td>
+          <td class="num">21,798.6</td>
+          <td class="num">#1</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">2</td>
+          <td class="team-name">Larry&nbsp;<span class="badge champ">🏆</span>&nbsp;<span class="badge champ">🏆</span>&nbsp;<span class="badge" style="border-color:#a02828;color:#a02828;">💩&times;1</span></td>
+          <td class="num">10</td>
+          <td class="num">75</td>
+          <td class="num">63</td>
+          <td class="num">54.3%</td>
+          <td class="num">21,586.8</td>
+          <td class="num">#1</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">3</td>
+          <td class="team-name">Collin</td>
+          <td class="num">10</td>
+          <td class="num">68</td>
+          <td class="num">70</td>
+          <td class="num">49.3%</td>
+          <td class="num">20,086.9</td>
+          <td class="num">#2</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">4</td>
+          <td class="team-name">Al&nbsp;<span class="badge champ">🏆</span>&nbsp;<span class="badge" style="border-color:#a02828;color:#a02828;">💩&times;1</span></td>
+          <td class="num">10</td>
+          <td class="num">60</td>
+          <td class="num">78</td>
+          <td class="num">43.5%</td>
+          <td class="num">19,241.9</td>
+          <td class="num">#1</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">5</td>
+          <td class="team-name">Nicky&nbsp;<span class="badge champ">🏆</span>&nbsp;<span class="badge" style="border-color:#a02828;color:#a02828;">💩&times;6</span></td>
+          <td class="num">10</td>
+          <td class="num">49</td>
+          <td class="num">89</td>
+          <td class="num">35.5%</td>
+          <td class="num">19,136.4</td>
+          <td class="num">#1</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">6</td>
+          <td class="team-name">Dominic&nbsp;<span class="badge champ">🏆</span></td>
+          <td class="num">8</td>
+          <td class="num">61</td>
+          <td class="num">47</td>
+          <td class="num">56.5%</td>
+          <td class="num">17,423.0</td>
+          <td class="num">#1</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">7</td>
+          <td class="team-name">Antonio&nbsp;<span class="badge champ">🏆</span></td>
+          <td class="num">7</td>
+          <td class="num">54</td>
+          <td class="num">39</td>
+          <td class="num">58.1%</td>
+          <td class="num">15,473.1</td>
+          <td class="num">#1</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">8</td>
+          <td class="team-name">Devere</td>
+          <td class="num">7</td>
+          <td class="num">41</td>
+          <td class="num">58</td>
+          <td class="num">41.4%</td>
+          <td class="num">13,930.1</td>
+          <td class="num">#2</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">9</td>
+          <td class="team-name">Dee&nbsp;<span class="badge champ">🏆</span>&nbsp;<span class="badge champ">🏆</span>&nbsp;<span class="badge" style="border-color:#a02828;color:#a02828;">💩&times;1</span></td>
+          <td class="num">5</td>
+          <td class="num">32</td>
+          <td class="num">35</td>
+          <td class="num">47.8%</td>
+          <td class="num">10,922.9</td>
+          <td class="num">#1</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">10</td>
+          <td class="team-name">Dylan</td>
+          <td class="num">5</td>
+          <td class="num">41</td>
+          <td class="num">30</td>
+          <td class="num">57.7%</td>
+          <td class="num">10,379.7</td>
+          <td class="num">#2</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">11</td>
+          <td class="team-name">Joey</td>
+          <td class="num">3</td>
+          <td class="num">23</td>
+          <td class="num">16</td>
+          <td class="num">59.0%</td>
+          <td class="num">6,349.0</td>
+          <td class="num">#5</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">12</td>
+          <td class="team-name">Scott&nbsp;<span class="badge" style="border-color:#a02828;color:#a02828;">💩&times;1</span></td>
+          <td class="num">3</td>
+          <td class="num">17</td>
+          <td class="num">22</td>
+          <td class="num">43.6%</td>
+          <td class="num">5,984.6</td>
+          <td class="num">#5</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">13</td>
+          <td class="team-name">Cory Harman</td>
+          <td class="num">2</td>
+          <td class="num">19</td>
+          <td class="num">9</td>
+          <td class="num">67.9%</td>
+          <td class="num">4,694.6</td>
+          <td class="num">#3</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">14</td>
+          <td class="team-name">John</td>
+          <td class="num">2</td>
+          <td class="num">15</td>
+          <td class="num">13</td>
+          <td class="num">53.6%</td>
+          <td class="num">4,674.4</td>
+          <td class="num">#4</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">15</td>
+          <td class="team-name">Giovanny&nbsp;<span class="badge champ">🏆</span></td>
+          <td class="num">2</td>
+          <td class="num">18</td>
+          <td class="num">10</td>
+          <td class="num">64.3%</td>
+          <td class="num">4,539.2</td>
+          <td class="num">#1</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">16</td>
+          <td class="team-name">Ricky</td>
+          <td class="num">2</td>
+          <td class="num">14</td>
+          <td class="num">14</td>
+          <td class="num">50.0%</td>
+          <td class="num">4,360.3</td>
+          <td class="num">#5</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">17</td>
+          <td class="team-name">Matt</td>
+          <td class="num">2</td>
+          <td class="num">11</td>
+          <td class="num">19</td>
+          <td class="num">36.7%</td>
+          <td class="num">3,048.9</td>
+          <td class="num">#7</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">18</td>
+          <td class="team-name">Zach</td>
+          <td class="num">1</td>
+          <td class="num">7</td>
+          <td class="num">8</td>
+          <td class="num">46.7%</td>
+          <td class="num">2,412.0</td>
+          <td class="num">#5</td>
+        </tr>
+        <tr>
+          <td class="rank-cell">19</td>
+          <td class="team-name">Alex</td>
+          <td class="num">1</td>
+          <td class="num">5</td>
+          <td class="num">8</td>
+          <td class="num">38.5%</td>
+          <td class="num">1,851.3</td>
+          <td class="num">#7</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
       <div class="season-block" id="s2025" data-year="2025">
         <div class="season-header">
           <span class="season-label">2025 Season</span>
@@ -1282,9 +1489,16 @@ function showYear(year, btn) {
   document.querySelectorAll('.yr-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
   document.querySelectorAll('.season-block').forEach(b => {
-    b.style.display = (year === 'all' || b.dataset.year === year) ? '' : 'none';
+    let show = false;
+    if (year === 'all') show = true;
+    else if (year === 'alltime') show = b.dataset.year === 'all';
+    else show = b.dataset.year === year;
+    b.style.display = show ? '' : 'none';
   });
-  if (year !== 'all') {
+  if (year === 'alltime') {
+    const el = document.getElementById('sall');
+    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  } else if (year !== 'all') {
     const el = document.getElementById('s' + year);
     if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
   }
